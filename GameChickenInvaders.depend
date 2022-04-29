@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1651202586 source:d:\workspace\gamechickeninvaders\main.cpp
+	<iostream>
+	<SDL.h>
+	<SDL_image.h>
+
