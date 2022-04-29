@@ -32,6 +32,14 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="Base.cpp" />
+		<Unit filename="Base.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="Common_Function.cpp" />
+		<Unit filename="Common_Function.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="Image/background.png" />
 		<Unit filename="Image/spacecraft.png" />
 		<Unit filename="main.cpp" />
