@@ -67,21 +67,25 @@ void spaceship::handleEvent(SDL_Event events, SDL_Renderer* renderer)
                 case SDLK_LEFT:
                     {
                         this->turnLeft();
+                        this->move();
                         break;
                     }
                 case SDLK_RIGHT:
                     {
                         this->turnRight();
+                        this->move();
                         break;
                     }
                 case SDLK_DOWN:
                     {
                         this->turnDown();
+                        this->move();
                         break;
                     }
                 case SDLK_UP:
                     {
                         this->turnUp();
+                        this->move();
                         break;
                     }
                 default: break;
@@ -89,21 +93,21 @@ void spaceship::handleEvent(SDL_Event events, SDL_Renderer* renderer)
     }
     else if(events.type == SDL_KEYUP);
     {
-
+        switch(events.key.keysym.sym)
+        {
+        case SDLK_UP:
+            {
+                rectOb.x -= stepX;
+                rectOb.y -= stepY;
+                break;
+            }
+        }
     }
 
     if(events.type == SDL_MOUSEBUTTONDOWN)
     {
+        weaponOb* pBullet = new weaponOb();
 
-    }
-    else if(events.type == SDL_MOUSEBUTTONUP)
-    {
-
-    }
-
-    weaponOb* pBullet = new weaponOb();
-    if(events.type == SDL_MOUSEBUTTONDOWN)
-    {
         if(events.button.button == SDL_BUTTON_LEFT)
         {
             pBullet->setType(weaponOb::BLASTER);
@@ -117,14 +121,13 @@ void spaceship::handleEvent(SDL_Event events, SDL_Renderer* renderer)
 
         SDL_Rect planeRect = this->getRect();
         int x_val = planeRect.x + planeRect.w/2;
-        int y_val = planeRect.y + 22;
+        int y_val = planeRect.y - planeRect.h;
         pBullet->setRect(x_val, y_val);
 
         pBullet->setIsMove(true);
 
         pWeaponList.push_back(pBullet);
     }
-
     else if(events.type == SDL_MOUSEBUTTONUP)
     {
 

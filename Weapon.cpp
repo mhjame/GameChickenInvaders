@@ -20,10 +20,10 @@ void weaponOb::HandleInputAction(SDL_Event events)
 {
 }
 
-void weaponOb::handleMoveSpacecraftBullet(const int& x_border, const int& y_border)
+void weaponOb::handleMoveSpaceshipBullet(const int& x_border, const int& y_border)
 {
-    rectOb.y += 20;
-    if(rectOb.y > y_border)
+    rectOb.y -= 20;
+    if(rectOb.y < 0)
     {
         setIsMove(false);
     }
@@ -34,16 +34,16 @@ void weaponOb::loadTextureBullet(SDL_Renderer* renderer, int weaponLevel)
     if(weaponType == BLASTER)
     {
         std::string blasterStr = "Image//blaster" + std::to_string(weaponLevel) + ".png";
-        cout << loadTexture(blasterStr, renderer) << endl;
+        loadTexture(blasterStr, renderer);
     }
     else if(weaponType == NEUTRON)
     {
         std::string neutronStr = "Image//neutron" + std::to_string(weaponLevel) + ".png";
-        cout << loadTexture(neutronStr, renderer) << endl;
+        loadTexture(neutronStr, renderer);
     }
     else if(weaponType == BORON)
     {
         std::string boronStr = "Image//boron" + std::to_string(weaponLevel) + ".png";
-        cout << loadTexture(boronStr, renderer) << endl;
+        loadTexture(boronStr, renderer);
     }
 }
