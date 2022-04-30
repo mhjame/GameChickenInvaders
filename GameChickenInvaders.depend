@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1651249226 source:d:\workspace\gamechickeninvaders\main.cpp
+1651291957 source:d:\workspace\gamechickeninvaders\main.cpp
 	"Common_Function.h"
 	"Base.h"
 	"Spaceship.h"
@@ -13,23 +13,26 @@
 	<SDL.h>
 	<SDL_image.h>
 
-1651248400 source:d:\workspace\gamechickeninvaders\base.cpp
+1651287983 source:d:\workspace\gamechickeninvaders\base.cpp
 	"Base.h"
 
-1651245674 d:\workspace\gamechickeninvaders\base.h
+1651287983 d:\workspace\gamechickeninvaders\base.h
 	"Common_Function.h"
 
-1651245401 d:\workspace\gamechickeninvaders\spaceship.h
+1651286875 d:\workspace\gamechickeninvaders\spaceship.h
 	"Common_Function.h"
 	"Base.h"
+	"Weapon.h"
+	<vector>
 
-1651245470 source:d:\workspace\gamechickeninvaders\spaceship.cpp
+1651287272 source:d:\workspace\gamechickeninvaders\spaceship.cpp
 	"Spaceship.h"
-
-1651249143 source:d:\workspace\gamechickeninvaders\weapon.cpp
 	"Weapon.h"
 
-1651249180 d:\workspace\gamechickeninvaders\weapon.h
+1651288642 source:d:\workspace\gamechickeninvaders\weapon.cpp
+	"Weapon.h"
+
+1651288705 d:\workspace\gamechickeninvaders\weapon.h
 	"Base.h"
 	<string>
 

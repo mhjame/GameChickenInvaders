@@ -3,6 +3,8 @@
 
 #include "Common_Function.h"
 #include "Base.h"
+#include "Weapon.h"
+#include <vector>
 
 // class spaceship: public baseOb kế thừa những
 // cái public của baseOb và những cái protected của baseOb
@@ -10,13 +12,6 @@
 class spaceship: public baseOb{
 
 public:
-    int posX;
-    int posY;
-    int sizW = SPACECRAFT_WIDTH;
-    int sizH = SPACECRAFT_HEIGHT;
-    int stepX = 5;
-    int stepY = 5;
-
     void render(SDL_Renderer* renderer)
     {
          SDL_Rect SpacecraftRect;
@@ -59,6 +54,24 @@ public:
     void turnDown();
 
     bool inside(int minX, int minY , int maxX, int maxY);
+
+    void setWeaponList(std::vector <weaponOb*> pWeaponList_)
+    {
+        this->pWeaponList = pWeaponList_;
+    }
+
+    std::vector<weaponOb*> getWeaponList() const{return this->pWeaponList;}
+
+    void handleEvent(SDL_Event events, SDL_Renderer* renderer);
+
+private:
+    int posX;
+    int posY;
+    int sizW = SPACECRAFT_WIDTH;
+    int sizH = SPACECRAFT_HEIGHT;
+    int stepX = 5;
+    int stepY = 5;
+    std::vector <weaponOb*> pWeaponList; // 1 vector con trỏ
 };
 
 #endif // SPACESHIP_H_INCLUDED

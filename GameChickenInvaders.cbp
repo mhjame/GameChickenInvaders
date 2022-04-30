@@ -41,7 +41,27 @@
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="Image/background.png" />
+		<Unit filename="Image/blaster0.png" />
+		<Unit filename="Image/blaster1.png" />
+		<Unit filename="Image/blaster2.png" />
+		<Unit filename="Image/blaster3.png" />
+		<Unit filename="Image/boron0.png" />
+		<Unit filename="Image/boron1.png" />
+		<Unit filename="Image/boron2.png" />
+		<Unit filename="Image/boron3.png" />
+		<Unit filename="Image/neutron0.png" />
+		<Unit filename="Image/neutron1.png" />
+		<Unit filename="Image/neutron2.png" />
+		<Unit filename="Image/neutron3.png" />
 		<Unit filename="Image/spacecraft.png" />
+		<Unit filename="Spaceship.cpp" />
+		<Unit filename="Spaceship.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="Weapon.cpp" />
+		<Unit filename="Weapon.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />

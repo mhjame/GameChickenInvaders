@@ -20,7 +20,7 @@ public:
     ~weaponOb();
 
     void HandleInputAction(SDL_Event events);
-    void handleMoveSpacecraftBullet();
+    void handleMoveSpacecraftBullet(const int &x_border, const int &y_border);
 
     int getType() const{return weaponType;}
     void setType(const int&type){weaponType = type;}

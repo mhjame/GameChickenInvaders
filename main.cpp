@@ -13,6 +13,23 @@ bool init();
 bool loadMedia();
 void close();
 
+void xuly()
+{
+    SDL_Event e;
+    while(e.type != SDL_QUIT)
+    {
+        SDL_PollEvent(&e);
+        if(e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEBUTTONUP)
+        {
+            weaponOb *pBullet = new weaponOb();
+            pBullet->loadTextureBullet(gRenderer, 1);
+            pBullet->Render(gRenderer);
+            cout << pBullet->getIsMove() << endl;
+        }
+
+        SDL_Delay(200);
+    }
+}
 void mainProgress()
 {
     // main loop flag
@@ -75,6 +92,32 @@ void mainProgress()
                 default: break;
             }
         }
+
+        if(e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEBUTTONUP)
+        {
+            weaponOb *pBullet = new weaponOb();
+            pBullet->loadTextureBullet(gRenderer, 1);
+            pBullet->Render(gRenderer);
+            cout << pBullet->getIsMove() << endl;
+
+        for(int i = 0; i < Spacecraft.getWeaponList().size(); ++i)
+        {
+            Spacecraft.handleEvent(e, gRenderer);
+            std::vector <weaponOb*> weaponList = Spacecraft.getWeaponList();
+            weaponOb *pBullet = weaponList[i];
+            pBullet->Render(gRenderer);
+
+            if(pBullet != nullptr)
+            {
+                if(pBullet->getIsMove())
+                {
+                    SDL_Rect pBulletRect = pBullet->getRect();
+                    pBullet->Render(gRenderer, &pBulletRect);
+                    pBullet->handleMoveSpacecraftBullet(SCREEN_WIDTH, SCREEN_HEIGHT);
+                }
+            }
+        }
+        }
     }
 }
 
@@ -86,6 +129,8 @@ int main(int argc, char* argv[])
     }
     else
     {
+        xuly();
+        /*
         if(!loadMedia())
         {
             printf("failed to load Media!\n");
@@ -96,7 +141,7 @@ int main(int argc, char* argv[])
             {
                 mainProgress();
             }
-        }
+        }*/
     }
     return 0;
 }

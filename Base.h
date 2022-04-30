@@ -20,7 +20,7 @@ public:
         rectOb.y = posY;
     }
 
-    SDL_Rect getRect() const
+    SDL_Rect getRect()
     {
         return rectOb;
     }
