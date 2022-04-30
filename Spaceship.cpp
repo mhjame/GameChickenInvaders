@@ -5,6 +5,8 @@ spaceship::spaceship(int posX, int posY)
 {
     this->posX = posX;
     this->posY = posY;
+    rectOb.x = posX;
+    rectOb.y = posY;
 }
 
 spaceship::spaceship() {
@@ -19,6 +21,8 @@ void spaceship::move()
     posX += stepX;
     posY += stepY;
 
+    rectOb.x = posX;
+    rectOb.y = posY;
     //cout << stepX << "," << stepY << endl;
 }
 
@@ -55,6 +59,48 @@ bool spaceship::inside(int minX, int minY, int maxX, int maxY)
 
 void spaceship::handleEvent(SDL_Event events, SDL_Renderer* renderer)
 {
+    if(events.type == SDL_KEYDOWN)
+    {
+        switch(events.key.keysym.sym)
+            {
+                case SDLK_ESCAPE: break;
+                case SDLK_LEFT:
+                    {
+                        this->turnLeft();
+                        break;
+                    }
+                case SDLK_RIGHT:
+                    {
+                        this->turnRight();
+                        break;
+                    }
+                case SDLK_DOWN:
+                    {
+                        this->turnDown();
+                        break;
+                    }
+                case SDLK_UP:
+                    {
+                        this->turnUp();
+                        break;
+                    }
+                default: break;
+            }
+    }
+    else if(events.type == SDL_KEYUP);
+    {
+
+    }
+
+    if(events.type == SDL_MOUSEBUTTONDOWN)
+    {
+
+    }
+    else if(events.type == SDL_MOUSEBUTTONUP)
+    {
+
+    }
+
     weaponOb* pBullet = new weaponOb();
     if(events.type == SDL_MOUSEBUTTONDOWN)
     {

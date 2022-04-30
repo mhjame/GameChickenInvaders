@@ -29,21 +29,36 @@ void xuly()
 
         SDL_Delay(200);
     }
-}
-void mainProgress()
-{
-    // main loop flag
-    //bool quit = false;
 
-    //Event handler
+    spaceship Spacecraft(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
+    weaponOb *pBullet = new weaponOb();
+    for(int i = 0; i < Spacecraft.getWeaponList().size(); ++i)
+        {
+            Spacecraft.handleEvent(e, gRenderer);
+            std::vector <weaponOb*> weaponList = Spacecraft.getWeaponList();
+            weaponOb *pBullet = weaponList[i];
+            pBullet->Render(gRenderer);
+
+            if(pBullet != nullptr)
+            {
+                if(pBullet->getIsMove())
+                {
+                    SDL_Rect pBulletRect = pBullet->getRect();
+                    pBullet->Render(gRenderer, &pBulletRect);
+                    pBullet->handleMoveSpacecraftBullet(SCREEN_WIDTH, SCREEN_HEIGHT);
+                }
+            }
+        }
+}
+
+void anotherpartofmainProgress()
+{
     SDL_Event e;
     spaceship Spacecraft(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
-
     while(Spacecraft.inside(0,0, SCREEN_WIDTH, SCREEN_HEIGHT))
     {
         Spacecraft.move();
         SDL_SetRenderDrawColor(gRenderer, GRAY_COLOR.r, GRAY_COLOR.g, GRAY_COLOR.b, 0);
-        Spacecraft.render(gRenderer);
 
         SDL_RenderPresent(gRenderer);
         SDL_Delay(100);
@@ -66,59 +81,94 @@ void mainProgress()
         // nếu có một phím được nhấn thì xét phím đó là gì để xử lỷ
         if(e.type == SDL_KEYDOWN)
         {
-            switch(e.key.keysym.sym)
-            {
-                case SDLK_ESCAPE: break;
-                case SDLK_LEFT:
-                    {
-                        Spacecraft.turnLeft();
-                        break;
-                    }
-                case SDLK_RIGHT:
-                    {
-                        Spacecraft.turnRight();
-                        break;
-                    }
-                case SDLK_DOWN:
-                    {
-                        Spacecraft.turnDown();
-                        break;
-                    }
-                case SDLK_UP:
-                    {
-                        Spacecraft.turnUp();
-                        break;
-                    }
-                default: break;
-            }
+
         }
+        /*
 
         if(e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEBUTTONUP)
         {
-            weaponOb *pBullet = new weaponOb();
+
             pBullet->loadTextureBullet(gRenderer, 1);
             pBullet->Render(gRenderer);
             cout << pBullet->getIsMove() << endl;
 
-        for(int i = 0; i < Spacecraft.getWeaponList().size(); ++i)
-        {
-            Spacecraft.handleEvent(e, gRenderer);
-            std::vector <weaponOb*> weaponList = Spacecraft.getWeaponList();
-            weaponOb *pBullet = weaponList[i];
-            pBullet->Render(gRenderer);
 
-            if(pBullet != nullptr)
+        }*/
+    }
+}
+
+void mainProgress()
+{
+    // main loop flag
+    bool quit = false;
+
+    //Event handler
+    //SDL_Event e;
+    spaceship Spacecraft(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
+
+    Spacecraft.loadTexture("Image//spacecraft.png", gRenderer);
+
+    Spacecraft.Render(gRenderer);
+
+    SDL_RenderPresent(gRenderer);
+
+    SDL_Rect BackgroundRect;
+    BackgroundRect.x = 0;
+    BackgroundRect.y = 0;
+    BackgroundRect.w = BACKGROUND_WIDTH;
+    BackgroundRect.h = BACKGROUND_HEIGHT;
+    gBackground = SDLCommonFunc::loadTexture("Image//background.png", gRenderer);
+    SDL_RenderCopy(gRenderer, gBackground, NULL, &BackgroundRect);
+
+    while(Spacecraft.inside(0,0, SCREEN_WIDTH, SCREEN_HEIGHT))
+    {
+        Spacecraft.move();
+        SDL_SetRenderDrawColor(gRenderer, GRAY_COLOR.r, GRAY_COLOR.g, GRAY_COLOR.b, 0);
+        SDL_RenderCopy(gRenderer, gBackground, NULL, &BackgroundRect);
+        Spacecraft.Render(gRenderer);
+        SDL_RenderPresent(gRenderer);
+
+        SDL_Delay(100);
+
+        if(SDL_PollEvent(&gEvent) == 0)
+        {
+            continue;
+        }
+
+        if(gEvent.type == SDL_QUIT)
+        {
+            break;
+        }
+
+        Spacecraft.handleEvent(gEvent, gRenderer);
+
+        // SDL_WaitEvent - nó đợi vô thời hạn
+        // lên đọc so sánh PollEvent và WaitEven để xem khác biệt
+
+        //if(e.type == SDL_QUIT) break;
+
+    }
+
+    /*
+    while(!quit)
+    {
+        while(SDL_PollEvent(&gEvent))
+        {
+            Spacecraft.move();
+            if(gEvent.type == SDL_QUIT)
             {
-                if(pBullet->getIsMove())
-                {
-                    SDL_Rect pBulletRect = pBullet->getRect();
-                    pBullet->Render(gRenderer, &pBulletRect);
-                    pBullet->handleMoveSpacecraftBullet(SCREEN_WIDTH, SCREEN_HEIGHT);
-                }
+                Spacecraft.handleEvent(gEvent, gRenderer);
+
+            Spacecraft.Render(gRenderer);
+
+            SDL_RenderPresent(gRenderer);
+
+            SDL_Delay(200);
+                quit = true;
+                break;
             }
         }
-        }
-    }
+    }*/
 }
 
 int main(int argc, char* argv[])
@@ -129,7 +179,7 @@ int main(int argc, char* argv[])
     }
     else
     {
-        xuly();
+        mainProgress();
         /*
         if(!loadMedia())
         {

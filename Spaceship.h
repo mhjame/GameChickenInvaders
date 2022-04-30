@@ -12,6 +12,7 @@
 class spaceship: public baseOb{
 
 public:
+    /*
     void render(SDL_Renderer* renderer)
     {
          SDL_Rect SpacecraftRect;
@@ -36,7 +37,7 @@ public:
         SDL_RenderCopy(renderer, gSpacecraft, NULL, &SpacecraftRect);
         //Update screen
         SDL_RenderPresent(renderer);
-    }
+    }*/
 
     spaceship(int posX, int posY);
     spaceship();
