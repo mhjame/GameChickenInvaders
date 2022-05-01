@@ -90,11 +90,18 @@ void mainProgress()
     bool ret = pChicken->loadTexture("Image//chicken_red1.png", gRenderer);
     //pChicken->Render(gRenderer);
     //SDL_RenderPresent(gRenderer);
-    int pCX =SCREEN_WIDTH;
+    int pCX =SCREEN_WIDTH/2;
     int pCY = 0;
     pChicken->setRect(pCX, pCY);
     if(ret == false) {return;}
     pChicken->set_x_val(10);
+
+    weaponOb* p_Weapon_chicken = new weaponOb();
+    /*
+    p_Weapon->Render(gRenderer);
+    SDL_RenderPresent(gRenderer);*/
+
+    pChicken->initWeapon(p_Weapon_chicken, gRenderer);
 
     while(Spacecraft.inside(0,0, SCREEN_WIDTH, SCREEN_HEIGHT))
     {
@@ -150,6 +157,8 @@ void mainProgress()
         // Run Chicken
         pChicken->Render(gRenderer);
         pChicken->HandleMove(SCREEN_WIDTH, SCREEN_HEIGHT);
+        pChicken->useWeapon(gRenderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+        p_Weapon_chicken->Render(gRenderer);
 
         // SDL_WaitEvent - nó đợi vô thời hạn
         // lên đọc so sánh PollEvent và WaitEven để xem khác biệt

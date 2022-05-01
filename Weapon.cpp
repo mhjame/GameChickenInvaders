@@ -29,6 +29,17 @@ void weaponOb::handleMoveSpaceshipBullet(const int& x_border, const int& y_borde
     }
 }
 
+
+void weaponOb::handleMoveChickenBullet(const int& x_border, const int& y_border)
+{
+    //cerr << rectOb.y << endl;
+    rectOb.y += 20;
+    if(rectOb.y >= y_border)
+    {
+        this->setIsMove(false);
+    }
+}
+
 void weaponOb::loadTextureBullet(SDL_Renderer* renderer, int weaponLevel)
 {
     if(weaponType == BLASTER)
