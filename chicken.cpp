@@ -14,7 +14,20 @@ Chicken::Chicken()
 
 Chicken::~Chicken()
 {
+    if(pWeaponList.size() > 0)
+    {
+        for(int i = 0; i < pWeaponList.size(); ++i)
+        {
+            weaponOb* pWeapon = pWeaponList.at(i);
+            if(pWeapon)
+            {
+                delete pWeapon;
+                pWeapon = NULL;
+            }
+        }
+    }
 
+    pWeaponList.clear();
 }
 
 void Chicken::initWeapon(weaponOb* pWeapon, SDL_Renderer* renderer)

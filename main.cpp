@@ -150,26 +150,7 @@ void mainProgress()
 
     }
 
-    /*
-    while(!quit)
-    {
-        while(SDL_PollEvent(&gEvent))
-        {
-            Spacecraft.move();
-            if(gEvent.type == SDL_QUIT)
-            {
-                Spacecraft.handleEvent(gEvent, gRenderer);
-
-            Spacecraft.Render(gRenderer);
-
-            SDL_RenderPresent(gRenderer);
-
-            SDL_Delay(200);
-                quit = true;
-                break;
-            }
-        }
-    }*/
+    delete [] pChickens;
 }
 
 int main(int argc, char* argv[])
