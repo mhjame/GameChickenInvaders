@@ -57,6 +57,34 @@ bool spaceship::inside(int minX, int minY, int maxX, int maxY)
     return false;
 }
 
+void spaceship::makeWeaponList(SDL_Renderer* renderer)
+{
+    for(int i = 0; i < pWeaponList.size(); ++i)
+    {
+        weaponOb *pBullet = pWeaponList.at(i);
+
+        pBullet->Render(renderer);
+
+        if(pBullet != nullptr)
+        {
+            if(pBullet->getIsMove())
+            {
+                SDL_Rect pBulletRect = pBullet->getRect();
+                pBullet->Render(renderer, &pBulletRect);
+                pBullet->handleMoveSpaceshipBullet(SCREEN_WIDTH, SCREEN_HEIGHT);
+                //SDL_Delay(10);
+            }
+            else
+            {
+                pWeaponList.erase(pWeaponList.begin() + i);
+
+                delete pBullet;
+                pBullet = NULL;
+            }
+        }
+    }
+}
+
 void spaceship::handleEvent(SDL_Event events, SDL_Renderer* renderer)
 {
     if(events.type == SDL_KEYDOWN)
@@ -108,8 +136,8 @@ void spaceship::handleEvent(SDL_Event events, SDL_Renderer* renderer)
                         int x_val = planeRect.x + planeRect.w/2 - 10;
                         int y_val = planeRect.y - planeRect.h - 5;
                         pBullet->setRect(x_val, y_val);
-
                         pBullet->setIsMove(true);
+                        pBullet->set_y_val_(80);
 
                         pWeaponList.push_back(pBullet);
 
@@ -124,10 +152,10 @@ void spaceship::handleEvent(SDL_Event events, SDL_Renderer* renderer)
                          pBullet->loadTextureBullet(renderer, 1);
 
                         SDL_Rect planeRect = this->getRect();
-                        int x_val = planeRect.x + planeRect.w/2 - 10;
-                        int y_val = planeRect.y - planeRect.h - 5;
-                        pBullet->setRect(x_val, y_val);
-
+                        int x_pos = planeRect.x + planeRect.w/2 - 10;
+                        int y_pos = planeRect.y - planeRect.h - 5;
+                        pBullet->setRect(x_pos, y_pos);
+                        pBullet->set_y_val_(80);
                         pBullet->setIsMove(true);
 
                         pWeaponList.push_back(pBullet);
@@ -179,3 +207,5 @@ void spaceship::handleEvent(SDL_Event events, SDL_Renderer* renderer)
 
     }*/
 }
+
+

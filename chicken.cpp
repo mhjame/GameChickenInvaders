@@ -42,6 +42,7 @@ void Chicken::initWeapon(weaponOb* pWeapon, SDL_Renderer* renderer)
             int pWY = this->getRect().y + this->getRect().h + 5;
 
             pWeapon->setRect(pWX, pWY);
+            pWeapon->set_y_val_(20);
             pWeaponList.push_back(pWeapon);
             //cout << this->getRect().x << " "<< this->getRect().y << " " << this->getRect().w << " " << this->getRect().h << endl;
         }

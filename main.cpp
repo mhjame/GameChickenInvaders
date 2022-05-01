@@ -82,7 +82,9 @@ void mainProgress()
         }
 
         Spacecraft.handleEvent(gEvent, gRenderer);
+        Spacecraft.makeWeaponList(gRenderer);
 
+        /*
         for(int i = 0; i < Spacecraft.getWeaponList().size(); ++i)
         {
             //Spacecraft.handleEvent(gEvent, gRenderer);
@@ -110,16 +112,7 @@ void mainProgress()
                     pBullet = NULL;
                 }
             }
-            /*
-            else if(pBullet == NULL)
-            {
-                weaponList.erase(weaponList.begin() + i);
-                Spacecraft.setWeaponList(weaponList);
-
-                delete pBullet;
-                pBullet = NULL;
-            }*/
-        }
+        }*/
 
         // Run Chicken
 
