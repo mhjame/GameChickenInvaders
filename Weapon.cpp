@@ -22,7 +22,7 @@ void weaponOb::HandleInputAction(SDL_Event events)
 
 void weaponOb::handleMoveSpaceshipBullet(const int& x_border, const int& y_border)
 {
-    rectOb.y -= 20;
+    rectOb.y -= 80;
     if(rectOb.y < 0)
     {
         setIsMove(false);

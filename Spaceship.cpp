@@ -120,8 +120,8 @@ void spaceship::handleEvent(SDL_Event events, SDL_Renderer* renderer)
         }
 
         SDL_Rect planeRect = this->getRect();
-        int x_val = planeRect.x + planeRect.w/2;
-        int y_val = planeRect.y - planeRect.h;
+        int x_val = planeRect.x + planeRect.w/2 - 10;
+        int y_val = planeRect.y - planeRect.h - 5;
         pBullet->setRect(x_val, y_val);
 
         pBullet->setIsMove(true);
