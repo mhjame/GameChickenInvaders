@@ -24,6 +24,7 @@ const int COLOR_KEY_R = 170;
 const int COLOR_KEY_G = 170;
 const int COLOR_KEY_B = 170;
 
+const int NUM_CHICKENS= 10;
 // The window we'll be rendering to
 static SDL_Window* gWindow = NULL;
 

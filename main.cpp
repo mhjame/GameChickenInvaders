@@ -86,22 +86,36 @@ void mainProgress()
     SDL_RenderCopy(gRenderer, gBackground, NULL, &BackgroundRect);
 
     // Make chicken
-    Chicken* pChicken = new Chicken();
-    bool ret = pChicken->loadTexture("Image//chicken_red1.png", gRenderer);
-    //pChicken->Render(gRenderer);
-    //SDL_RenderPresent(gRenderer);
-    int pCX =SCREEN_WIDTH/2;
-    int pCY = 0;
-    pChicken->setRect(pCX, pCY);
-    if(ret == false) {return;}
-    pChicken->set_x_val(10);
+    Chicken* pChickens = new Chicken[NUM_CHICKENS + 5];
 
-    weaponOb* p_Weapon_chicken = new weaponOb();
-    /*
-    p_Weapon->Render(gRenderer);
-    SDL_RenderPresent(gRenderer);*/
+    for(int i = 1; i < NUM_CHICKENS; ++i)
+    {
+        Chicken* pChicken = (pChickens + i);
+        if(pChicken == NULL) return;
+        bool ret = pChicken->loadTexture("Image//chicken_red1.png", gRenderer);
+        if(ret == false) {
+            return;
+        }
+        //pChicken->Render(gRenderer);
+        //SDL_RenderPresent(gRenderer);
 
-    pChicken->initWeapon(p_Weapon_chicken, gRenderer);
+        int pCX = 0 + i*100;
+        int pCY = 0;
+        //int pCY = rand()%400;
+
+        pChicken->setRect(pCX , pCY);
+        if(ret == false) {return;}
+
+        pChicken->set_x_val(10);
+
+        weaponOb* p_Weapon_chicken = new weaponOb();
+        pChicken->initWeapon(p_Weapon_chicken, gRenderer);
+
+        /*
+        p_Weapon->Render(gRenderer);
+        SDL_RenderPresent(gRenderer);*/
+    }
+
 
     while(Spacecraft.inside(0,0, SCREEN_WIDTH, SCREEN_HEIGHT))
     {
@@ -133,7 +147,7 @@ void mainProgress()
                     SDL_Rect pBulletRect = pBullet->getRect();
                     pBullet->Render(gRenderer, &pBulletRect);
                     pBullet->handleMoveSpaceshipBullet(SCREEN_WIDTH, SCREEN_HEIGHT);
-                    SDL_Delay(100);
+                    SDL_Delay(10);
                 }
                 else
                 {
@@ -144,6 +158,7 @@ void mainProgress()
                     pBullet = NULL;
                 }
             }
+            /*
             else if(pBullet == NULL)
             {
                 weaponList.erase(weaponList.begin() + i);
@@ -151,14 +166,23 @@ void mainProgress()
 
                 delete pBullet;
                 pBullet = NULL;
-            }
+            }*/
         }
 
         // Run Chicken
-        pChicken->Render(gRenderer);
-        pChicken->HandleMove(SCREEN_WIDTH, SCREEN_HEIGHT);
-        pChicken->useWeapon(gRenderer, SCREEN_WIDTH, SCREEN_HEIGHT);
-        p_Weapon_chicken->Render(gRenderer);
+
+        for(int t = 1; t < NUM_CHICKENS; ++t)
+        {
+            Chicken *pChicken = (pChickens + t);
+            if(pChicken)
+            {
+                pChicken->Render(gRenderer);
+                pChicken->HandleMove(SCREEN_WIDTH, SCREEN_HEIGHT);
+                pChicken->useWeapon(gRenderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+                //p_Weapon_chicken->Render(gRenderer);
+
+            }
+        }
 
         // SDL_WaitEvent - nó đợi vô thời hạn
         // lên đọc so sánh PollEvent và WaitEven để xem khác biệt

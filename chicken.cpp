@@ -62,9 +62,9 @@ void Chicken::useWeapon(SDL_Renderer* renderer, const int& x_limit, const int& y
             //cout << this->getRect().x << " "<< this->getRect().y << " " << this->getRect().w << " " << this->getRect().h << endl;
 
             //cout << 1 << " " << pWX << " " << pWY << endl;
-            //pWeapon->Render(renderer);
+            pWeapon->Render(renderer);
             //SDL_RenderPresent(renderer);
-            SDL_Delay(10);
+            //SDL_Delay(10);
         }
     }
 }
