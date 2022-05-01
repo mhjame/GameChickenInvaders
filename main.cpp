@@ -14,54 +14,6 @@ bool init();
 bool loadMedia();
 void close();
 
-void xuly()
-{
-    SDL_Event e;
-    while(e.type != SDL_QUIT)
-    {
-        SDL_PollEvent(&e);
-        if(e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEBUTTONUP)
-        {
-            weaponOb *pBullet = new weaponOb();
-            pBullet->loadTextureBullet(gRenderer, 1);
-            pBullet->Render(gRenderer);
-            cout << pBullet->getIsMove() << endl;
-        }
-
-        SDL_Delay(200);
-    }
-
-    spaceship Spacecraft(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
-    weaponOb *pBullet = new weaponOb();
-    for(int i = 0; i < Spacecraft.getWeaponList().size(); ++i)
-        {
-            Spacecraft.handleEvent(e, gRenderer);
-            std::vector <weaponOb*> weaponList = Spacecraft.getWeaponList();
-            weaponOb *pBullet = weaponList[i];
-            pBullet->Render(gRenderer);
-
-            if(pBullet != nullptr)
-            {
-                if(pBullet->getIsMove())
-                {
-                    SDL_Rect pBulletRect = pBullet->getRect();
-                    pBullet->Render(gRenderer, &pBulletRect);
-                    pBullet->handleMoveSpaceshipBullet(SCREEN_WIDTH, SCREEN_HEIGHT);
-                }
-            }
-        }
-}
-
-void thu()
-{
-     weaponOb *pBullet = new weaponOb();
-     pBullet->loadTextureBullet(gRenderer, 1);
-     SDL_Rect rectp = pBullet->getRect();
-     pBullet->Render(gRenderer, &rectp);
-     SDL_RenderPresent(gRenderer);
-     SDL_Delay(2000);
-}
-
 void mainProgress()
 {
     // main loop flag
@@ -147,7 +99,7 @@ void mainProgress()
                     SDL_Rect pBulletRect = pBullet->getRect();
                     pBullet->Render(gRenderer, &pBulletRect);
                     pBullet->handleMoveSpaceshipBullet(SCREEN_WIDTH, SCREEN_HEIGHT);
-                    SDL_Delay(10);
+                    //SDL_Delay(10);
                 }
                 else
                 {
@@ -230,20 +182,7 @@ int main(int argc, char* argv[])
     {
         //thu();
         mainProgress();
-
         close();
-        /*
-        if(!loadMedia())
-        {
-            printf("failed to load Media!\n");
-        }
-        else
-        {
-            if(loadMedia())
-            {
-                mainProgress();
-            }
-        }*/
     }
     return 0;
 }

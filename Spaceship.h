@@ -70,8 +70,8 @@ private:
     int posY;
     int sizW = SPACECRAFT_WIDTH;
     int sizH = SPACECRAFT_HEIGHT;
-    int stepX = 5;
-    int stepY = 5;
+    int stepX = 15;
+    int stepY = 15;
     std::vector <weaponOb*> pWeaponList; // 1 vector con trỏ
 };
 

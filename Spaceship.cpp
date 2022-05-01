@@ -28,25 +28,25 @@ void spaceship::move()
 
 void spaceship::turnLeft()
 {
-    stepX =-5;
+    stepX =-15;
     stepY = 0;
 }
 
 void spaceship::turnRight()
 {
-    stepX = 5;
+    stepX = 15;
     stepY = 0;
 }
 
 void spaceship::turnUp()
 {
-    stepY = -5;
+    stepY = -15;
     stepX = 0;
 }
 
 void spaceship::turnDown()
 {
-    stepY = 5;
+    stepY = 15;
     stepX = 0;
 }
 

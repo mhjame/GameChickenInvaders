@@ -97,7 +97,8 @@ void Chicken::HandleMove(const int& x_border, const int& y_border)
     {
         rectOb.x += x_val_;
     }
-    SDL_Delay(10);
+    //SDL_Delay(10);
+    SDL_Delay(5);
 }
 
 void Chicken::HandleInputAction(SDL_Event &events)
