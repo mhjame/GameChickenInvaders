@@ -16,6 +16,7 @@ void close();
 
 void mainProgress()
 {
+
     // main loop flag
     bool quit = false;
 
@@ -28,6 +29,10 @@ void mainProgress()
     Spacecraft.Render(gRenderer);
 
     SDL_RenderPresent(gRenderer);
+
+    // Apply background
+
+    //int background_y = 0;
 
     SDL_Rect BackgroundRect;
     BackgroundRect.x = 0;
@@ -71,8 +76,22 @@ void mainProgress()
 
     while(Spacecraft.inside(0,0, SCREEN_WIDTH, SCREEN_HEIGHT))
     {
+        // apply backgound
+        //background_y += 2;
+        BackgroundRect.y += 2;
         SDL_SetRenderDrawColor(gRenderer, GRAY_COLOR.r, GRAY_COLOR.g, GRAY_COLOR.b, 0);
         SDL_RenderCopy(gRenderer, gBackground, NULL, &BackgroundRect);
+
+        SDL_Rect BackgroundRect2 = BackgroundRect;
+        BackgroundRect2.y -= SCREEN_HEIGHT;
+        SDL_RenderCopy(gRenderer, gBackground, NULL, &BackgroundRect2);
+
+
+        if(BackgroundRect.y >= SCREEN_HEIGHT)
+        {
+            BackgroundRect.y = 0;
+        }
+
         Spacecraft.Render(gRenderer);
         //SDL_RenderPresent(gRenderer);
 
@@ -82,37 +101,8 @@ void mainProgress()
         }
 
         Spacecraft.handleEvent(gEvent, gRenderer);
-        Spacecraft.makeWeaponList(gRenderer);
+        Spacecraft.makeWeaponList(gRenderer); // make bullet list of spacecraft
 
-        /*
-        for(int i = 0; i < Spacecraft.getWeaponList().size(); ++i)
-        {
-            //Spacecraft.handleEvent(gEvent, gRenderer);
-            std::vector <weaponOb*> weaponList = Spacecraft.getWeaponList();
-            //weaponOb *pBullet = weaponList[i];
-            weaponOb *pBullet = weaponList.at(i);
-
-            pBullet->Render(gRenderer);
-
-            if(pBullet != nullptr)
-            {
-                if(pBullet->getIsMove())
-                {
-                    SDL_Rect pBulletRect = pBullet->getRect();
-                    pBullet->Render(gRenderer, &pBulletRect);
-                    pBullet->handleMoveSpaceshipBullet(SCREEN_WIDTH, SCREEN_HEIGHT);
-                    //SDL_Delay(10);
-                }
-                else
-                {
-                    weaponList.erase(weaponList.begin() + i);
-                    Spacecraft.setWeaponList(weaponList);
-
-                    delete pBullet;
-                    pBullet = NULL;
-                }
-            }
-        }*/
 
         // Run Chicken
 
