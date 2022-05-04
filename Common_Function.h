@@ -24,7 +24,10 @@ const int COLOR_KEY_R = 170;
 const int COLOR_KEY_G = 170;
 const int COLOR_KEY_B = 170;
 
+const int CHICKEN_W = 74;
+const int CHICKEN_H = 68;
 const int NUM_CHICKENS= 10;
+
 // The window we'll be rendering to
 static SDL_Window* gWindow = NULL;
 
@@ -36,9 +39,11 @@ static SDL_Event gEvent;
 // the spacescraft we'll be rendering to
 static SDL_Texture* gSpacecraft = NULL;
 
+
 namespace SDLCommonFunc
 {
     SDL_Texture* loadTexture(std::string path, SDL_Renderer* renderer);
+    bool CheckCollision(const SDL_Rect &object1, const SDL_Rect &object2);
 }
 
 #endif // COMMON_FUNCTION_H_INCLUDED

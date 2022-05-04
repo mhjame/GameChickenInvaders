@@ -8,6 +8,7 @@ class baseOb
 /// nếu để private các lớp con kế thừa nó muốn đọc sẽ không đọc được
 protected:
     SDL_Rect rectOb;
+    SDL_Rect rectSrc;
     SDL_Texture* object;
 
 public:
@@ -24,6 +25,9 @@ public:
     {
         return rectOb;
     }
+
+    void setSrcRect(int &posX, int& posY, int &wid, int &hei){rectSrc.x = posX, rectSrc.y = posY, rectSrc.w = wid, rectSrc.h = hei;}
+    SDL_Rect getSrcRect(){return rectSrc;}
 
     void setObject(SDL_Texture* object)
     {

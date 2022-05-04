@@ -66,6 +66,8 @@ public:
     void handleEvent(SDL_Event events, SDL_Renderer* renderer);
 
     void makeWeaponList(SDL_Renderer* renderer);
+    void RemoveWeapon(const int& idx);
+
 private:
     int posX;
     int posY;

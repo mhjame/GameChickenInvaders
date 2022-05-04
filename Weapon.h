@@ -37,9 +37,14 @@ public:
 
     void loadTextureBullet(SDL_Renderer* renderer, int weaponLevel);
 
+    void set_x_val_(const int& val){x_val_ = val;}
+    void set_y_val_(const int& val){y_val_ = val;}
+
+    int get_x_val() const{return x_val_;}
+    int get_y_val() const{return y_val_;}
 private:
-    int posX = 0;
-    int posY = 0;
+    int x_val_ = 0;
+    int y_val_ = 0;
     bool isMove;
     int weaponType;
 };

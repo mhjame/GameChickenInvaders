@@ -208,4 +208,24 @@ void spaceship::handleEvent(SDL_Event events, SDL_Renderer* renderer)
     }*/
 }
 
+void spaceship::RemoveWeapon(const int& idx)
+{
+    int siz = pWeaponList.size();
+    if(siz > 0 && idx < siz)
+    {
+        for(int i = 0; i < pWeaponList.size(); ++i)
+        {
+            weaponOb *pWeapon = pWeaponList.at(idx);
+            pWeaponList.erase(pWeaponList.begin() + idx);
+
+            if(pWeapon != NULL)
+            {
+                delete pWeapon;
+                pWeapon = NULL;
+            }
+        }
+    }
+
+}
+
 

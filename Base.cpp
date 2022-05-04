@@ -7,6 +7,11 @@ baseOb::baseOb()
     rectOb.y = 0;
     rectOb.w = 0;
     rectOb.h = 0;
+
+    rectSrc.x = 0;
+    rectSrc.y = 0;
+    rectSrc.w = 0;
+    rectSrc.h = 0;
 }
 
 baseOb::~baseOb()

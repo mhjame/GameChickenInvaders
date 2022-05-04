@@ -64,9 +64,9 @@ void mainProgress()
         if(ret == false) {return;}
 
         pChicken->set_x_val(10);
-
         weaponOb* p_Weapon_chicken = new weaponOb();
         pChicken->initWeapon(p_Weapon_chicken, gRenderer);
+        pChicken->set_isLive(true);
 
         /*
         p_Weapon->Render(gRenderer);
@@ -78,7 +78,7 @@ void mainProgress()
     {
         // apply backgound
         //background_y += 2;
-        BackgroundRect.y += 2;
+
         SDL_SetRenderDrawColor(gRenderer, GRAY_COLOR.r, GRAY_COLOR.g, GRAY_COLOR.b, 0);
         SDL_RenderCopy(gRenderer, gBackground, NULL, &BackgroundRect);
 
@@ -86,6 +86,7 @@ void mainProgress()
         BackgroundRect2.y -= SCREEN_HEIGHT;
         SDL_RenderCopy(gRenderer, gBackground, NULL, &BackgroundRect2);
 
+        BackgroundRect.y += 2;
 
         if(BackgroundRect.y >= SCREEN_HEIGHT)
         {
@@ -103,7 +104,7 @@ void mainProgress()
         Spacecraft.handleEvent(gEvent, gRenderer);
         Spacecraft.makeWeaponList(gRenderer); // make bullet list of spacecraft
 
-
+        //cout << Spacecraft.getWeaponList().size() << endl;
         // Run Chicken
 
         for(int t = 1; t < NUM_CHICKENS; ++t)
@@ -111,10 +112,61 @@ void mainProgress()
             Chicken *pChicken = (pChickens + t);
             if(pChicken)
             {
-                pChicken->Render(gRenderer);
+                if(pChicken->get_isLive() == false){continue;}
+                /*SDL_Rect srcRect = pChicken->getSrcRect();
+                srcRect.x += CHICKEN_W;
+                int lim_x = pChicken->getRect().w;
+
+                if(srcRect.x >= lim_x)
+                {
+                    srcRect.x = 0;
+                    srcRect.y = 0;
+                    srcRect.w = CHICKEN_W;
+                    srcRect.h = CHICKEN_H;
+                }*/
+
                 pChicken->HandleMove(SCREEN_WIDTH, SCREEN_HEIGHT);
+
+                //cout << pChicken->getRect().x << " " << pChicken->getRect().y << " " << pChicken->getRect().w << " " << pChicken->getRect().h << endl;
                 pChicken->useWeapon(gRenderer, SCREEN_WIDTH, SCREEN_HEIGHT);
                 //p_Weapon_chicken->Render(gRenderer);
+                pChicken->Render(gRenderer);
+                //SDL_RenderPresent(gRenderer);
+
+                bool is_col = SDLCommonFunc::CheckCollision(Spacecraft.getRect(), pChicken->getRect());
+                if(is_col)
+                {
+                    //SDL_Delay(2000);
+                    //cout << "have collision - game over!" << endl;
+                    delete [] pChickens;
+                    close();
+                    return;
+                }
+
+                //xuly đạn bắn
+
+
+
+                std::vector<weaponOb*> bulletList = Spacecraft.getWeaponList();
+                //cout << Spacecraft.getWeaponList().size() << endl;
+
+                for(int id = 0; id < bulletList.size(); ++id)
+                {
+                    cout << 1 << endl;
+                    weaponOb *pBullet = bulletList.at(id);
+                    if(pBullet != NULL)
+                    {
+                       // cout << pBullet->getRect().x << " " << pBullet->getRect().y
+                                //<< " " << pBullet->getRect().w << " " << pBullet->getRect().h << endl;
+
+                        bool bulShoot = SDLCommonFunc::CheckCollision(pBullet->getRect(), pChicken->getRect());
+                        if(bulShoot)
+                        {
+                            Spacecraft.RemoveWeapon(id);
+                            pChicken->set_isLive(false);
+                        }
+                    }
+                }
 
             }
         }

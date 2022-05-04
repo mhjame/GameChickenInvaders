@@ -6,8 +6,8 @@ weaponOb::weaponOb()
 {
     rectOb.x = 0;
     rectOb.y = 0;
-    posX = 0;
-    posY = 0;
+    x_val_ = 0;
+    y_val_ = 0;
     isMove = false;
     weaponType = BLASTER;
 }
@@ -22,7 +22,7 @@ void weaponOb::HandleInputAction(SDL_Event events)
 
 void weaponOb::handleMoveSpaceshipBullet(const int& x_border, const int& y_border)
 {
-    rectOb.y -= 80;
+    rectOb.y -= y_val_;
     if(rectOb.y < 0)
     {
         setIsMove(false);
@@ -33,7 +33,7 @@ void weaponOb::handleMoveSpaceshipBullet(const int& x_border, const int& y_borde
 void weaponOb::handleMoveChickenBullet(const int& x_border, const int& y_border)
 {
     //cerr << rectOb.y << endl;
-    rectOb.y += 20;
+    rectOb.y += y_val_;
     if(rectOb.y >= y_border)
     {
         this->setIsMove(false);

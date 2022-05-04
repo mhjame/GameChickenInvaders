@@ -26,6 +26,9 @@ public:
     void set_status(bool val){status = val;}
     bool get_status(){return status;}
 
+    void set_isLive(bool val){isLive = val;}
+    bool get_isLive(){return isLive;}
+
     void setWeaponList(std::vector <weaponOb*> pWeaponList_)
     {
         this->pWeaponList = pWeaponList_;
@@ -39,6 +42,7 @@ private:
     int x_val_;
     int y_val_;
     bool status;
+    bool isLive;
     std::vector <weaponOb*> pWeaponList; // 1 vector con trỏ
 };
 
