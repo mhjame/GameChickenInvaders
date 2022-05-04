@@ -68,6 +68,9 @@ public:
     void makeWeaponList(SDL_Renderer* renderer);
     void RemoveWeapon(const int& idx);
 
+    void setHeart(int &val){heart = val;}
+    int getHeart(){return heart;}
+
 private:
     int posX;
     int posY;
@@ -75,6 +78,7 @@ private:
     int sizH = SPACECRAFT_HEIGHT;
     int stepX = 15;
     int stepY = 15;
+    int heart = 3;
     std::vector <weaponOb*> pWeaponList; // 1 vector con trỏ
 };
 

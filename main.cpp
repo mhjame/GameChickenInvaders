@@ -74,6 +74,9 @@ void mainProgress()
     }
 
 
+    int countHeart = 30;
+    Spacecraft.setHeart(countHeart);
+
     while(Spacecraft.inside(0,0, SCREEN_WIDTH, SCREEN_HEIGHT))
     {
         // apply backgound
@@ -152,7 +155,6 @@ void mainProgress()
 
                 for(int id = 0; id < bulletList.size(); ++id)
                 {
-                    cout << 1 << endl;
                     weaponOb *pBullet = bulletList.at(id);
                     if(pBullet != NULL)
                     {
@@ -164,6 +166,35 @@ void mainProgress()
                         {
                             Spacecraft.RemoveWeapon(id);
                             pChicken->set_isLive(false);
+                        }
+                    }
+                }
+
+                // xuly egg shooting spacecraft
+
+                std::vector<weaponOb*> eggList = pChicken->getWeaponList();
+
+                for(int ide = 0; ide < eggList.size(); ++ide)
+                {
+                    weaponOb *pEgg = eggList.at(ide);
+                    if(pEgg != NULL)
+                    {
+                        bool eggShoot = SDLCommonFunc::CheckCollision(pEgg->getRect(), Spacecraft.getRect());
+                        if(eggShoot)
+                        {
+                            int cntHeart = Spacecraft.getHeart();
+                            cntHeart-= 1;
+                            cout << cntHeart << endl;
+                            if(cntHeart > 0)
+                            {
+                                Spacecraft.setHeart(cntHeart);
+                            }
+                            else
+                            {
+                                cout << "your spacecraft was crash" << endl;
+                                SDL_Delay(1000);
+                                return;
+                            }
                         }
                     }
                 }
