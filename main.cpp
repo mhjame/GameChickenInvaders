@@ -32,7 +32,6 @@ void mainProgress()
     SDL_RenderPresent(gRenderer);
 
     // Apply background
-
     //int background_y = 0;
 
     SDL_Rect BackgroundRect;
@@ -44,10 +43,12 @@ void mainProgress()
 
     SDL_RenderCopy(gRenderer, gBackground, NULL, &BackgroundRect);
 
-    // init exploion object
-    Explosion* exp_spacecraft;
-    bool ret = exp_spacecraft->loadTexture("Image//exp.png", gRenderer);
-    if(!ret){cout << "load exp wrong"; return;}
+    // init exp
+
+    Explosion exp_main;
+    bool ret = exp_main.loadTexture("Image//exp.png", gRenderer);
+    exp_main.set_clip();
+    if(!ret) return;
 
     // Make chicken
     Chicken* pChickens = new Chicken[NUM_CHICKENS + 5];
@@ -151,15 +152,14 @@ void mainProgress()
                         int x_pos = (Spacecraft.getRect().x + Spacecraft.getRect().w/2) - WIDTH_FRAME_EXP/2;
                         int y_pos = (Spacecraft.getRect().y + Spacecraft.getRect().h/2) - HEIGHT_FRAME_EXP/2;
 
-                        exp_spacecraft->set_frame(ex);
-                        exp_spacecraft->setRect(x_pos, y_pos);
-                        exp_spacecraft->show(gRenderer);
+                        exp_main.set_frame(ex);
+                        exp_main.setRect(x_pos, y_pos);
+                        exp_main.show(gRenderer);
                         SDL_RenderPresent(gRenderer);
-
+                        SDL_Delay(100);
                     }
 
-
-                    SDL_Delay(2000);
+                    SDL_Delay(500);
                     //cout << "have collision - game over!" << endl;
                     delete [] pChickens;
 
