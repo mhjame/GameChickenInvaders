@@ -3,6 +3,7 @@
 #include "Spaceship.h"
 #include "Weapon.h"
 #include "Chicken.h"
+#include "Explosion.h"
 
 //loads individual image as texture
 SDL_Texture* loadTexture(std::string path);
@@ -40,7 +41,13 @@ void mainProgress()
     BackgroundRect.w = BACKGROUND_WIDTH;
     BackgroundRect.h = BACKGROUND_HEIGHT;
     gBackground = SDLCommonFunc::loadTexture("Image//background.png", gRenderer);
+
     SDL_RenderCopy(gRenderer, gBackground, NULL, &BackgroundRect);
+
+    // init exploion object
+    Explosion* exp_spacecraft;
+    bool ret = exp_spacecraft->loadTexture("Image//exp.png", gRenderer);
+    if(!ret){cout << "load exp wrong"; return;}
 
     // Make chicken
     Chicken* pChickens = new Chicken[NUM_CHICKENS + 5];
@@ -139,9 +146,23 @@ void mainProgress()
                 bool is_col = SDLCommonFunc::CheckCollision(Spacecraft.getRect(), pChicken->getRect());
                 if(is_col)
                 {
-                    //SDL_Delay(2000);
+                    for(int ex = 0; ex < 8; ++ex)
+                    {
+                        int x_pos = (Spacecraft.getRect().x + Spacecraft.getRect().w/2) - WIDTH_FRAME_EXP/2;
+                        int y_pos = (Spacecraft.getRect().y + Spacecraft.getRect().h/2) - HEIGHT_FRAME_EXP/2;
+
+                        exp_spacecraft->set_frame(ex);
+                        exp_spacecraft->setRect(x_pos, y_pos);
+                        exp_spacecraft->show(gRenderer);
+                        SDL_RenderPresent(gRenderer);
+
+                    }
+
+
+                    SDL_Delay(2000);
                     //cout << "have collision - game over!" << endl;
                     delete [] pChickens;
+
                     close();
                     return;
                 }
