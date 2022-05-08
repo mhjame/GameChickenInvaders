@@ -63,7 +63,7 @@ public:
 
     std::vector<weaponOb*> getWeaponList() const{return this->pWeaponList;}
 
-    void handleEvent(SDL_Event events, SDL_Renderer* renderer);
+    void handleEvent(SDL_Event events, SDL_Renderer* renderer, Mix_Chunk* bullet_sound[2]);
 
     void makeWeaponList(SDL_Renderer* renderer);
     void RemoveWeapon(const int& idx);

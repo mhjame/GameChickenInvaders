@@ -85,7 +85,7 @@ void spaceship::makeWeaponList(SDL_Renderer* renderer)
     }
 }
 
-void spaceship::handleEvent(SDL_Event events, SDL_Renderer* renderer)
+void spaceship::handleEvent(SDL_Event events, SDL_Renderer* renderer, Mix_Chunk* bullet_sound[2])
 {
     if(events.type == SDL_KEYDOWN)
     {
@@ -139,6 +139,7 @@ void spaceship::handleEvent(SDL_Event events, SDL_Renderer* renderer)
                         pBullet->setIsMove(true);
                         pBullet->set_y_val_(80);
 
+                        Mix_PlayChannel(-1, bullet_sound[0], 0);
                         pWeaponList.push_back(pBullet);
 
                         break;
@@ -158,6 +159,7 @@ void spaceship::handleEvent(SDL_Event events, SDL_Renderer* renderer)
                         pBullet->set_y_val_(80);
                         pBullet->setIsMove(true);
 
+                        Mix_PlayChannel(-1, bullet_sound[1], 0);
                         pWeaponList.push_back(pBullet);
 
                         break;

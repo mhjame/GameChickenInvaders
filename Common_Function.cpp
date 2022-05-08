@@ -1,5 +1,6 @@
 #include "Common_Function.h"
 
+
 SDL_Texture* SDLCommonFunc::loadTexture(std::string path, SDL_Renderer* renderer)
 {
     ///The final texture

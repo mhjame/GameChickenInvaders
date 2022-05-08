@@ -43,12 +43,13 @@ void mainProgress()
 
     SDL_RenderCopy(gRenderer, gBackground, NULL, &BackgroundRect);
 
-    // init exp
+    // init exp main
 
     Explosion exp_main;
     bool ret = exp_main.loadTexture("Image//exp.png", gRenderer);
     exp_main.set_clip();
     if(!ret) return;
+
 
     // Make chicken
     Chicken* pChickens = new Chicken[NUM_CHICKENS + 5];
@@ -112,7 +113,8 @@ void mainProgress()
             break;
         }
 
-        Spacecraft.handleEvent(gEvent, gRenderer);
+        Spacecraft.handleEvent(gEvent, gRenderer, g_sound_bullet);
+        // truyền g_sound_bullet thì ok, g_sound_bullet[2] thì ko đc
         Spacecraft.makeWeaponList(gRenderer); // make bullet list of spacecraft
 
         //cout << Spacecraft.getWeaponList().size() << endl;
@@ -147,6 +149,8 @@ void mainProgress()
                 bool is_col = SDLCommonFunc::CheckCollision(Spacecraft.getRect(), pChicken->getRect());
                 if(is_col)
                 {
+                    Mix_PlayChannel(-1, g_sound_exp[0], 0);
+                    // xuly vu no spacecraft and chicken
                     for(int ex = 0; ex < 8; ++ex)
                     {
                         int x_pos = (Spacecraft.getRect().x + Spacecraft.getRect().w/2) - WIDTH_FRAME_EXP/2;
@@ -159,7 +163,7 @@ void mainProgress()
                         SDL_Delay(100);
                     }
 
-                    SDL_Delay(500);
+                    //SDL_Delay(500);
                     //cout << "have collision - game over!" << endl;
                     delete [] pChickens;
 
@@ -304,6 +308,16 @@ bool init()
             }
         }
     }
+
+    if(Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) return false;
+
+    // Read file wav audio
+    g_sound_bullet[0] = Mix_LoadWAV("Sound//sound_blaster.wav");
+    g_sound_bullet[1] = Mix_LoadWAV("Sound//sound_boron.wav");
+    g_sound_exp[0] = Mix_LoadWAV("Sound//sound_exp.wav");
+
+    if(g_sound_bullet[0] == NULL || g_sound_bullet[1] == NULL || g_sound_exp[0] == NULL) return false;
+
     return success;
 }
 

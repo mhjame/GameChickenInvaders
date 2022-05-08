@@ -1,6 +1,6 @@
 #ifndef COMMON_FUNCTION_H_INCLUDED
 #define COMMON_FUNCTION_H_INCLUDED
-
+#include <SDL_mixer.h>
 /// where put every function or figure in general process
 
 #include <iostream>
@@ -39,6 +39,8 @@ static SDL_Event gEvent;
 // the spacescraft we'll be rendering to
 static SDL_Texture* gSpacecraft = NULL;
 
+static Mix_Chunk* g_sound_bullet[2];
+static Mix_Chunk* g_sound_exp[2];
 
 namespace SDLCommonFunc
 {
