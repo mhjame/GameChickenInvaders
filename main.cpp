@@ -191,6 +191,21 @@ void mainProgress()
                         {
                             Spacecraft.RemoveWeapon(id);
                             pChicken->set_isLive(false);
+
+                            Mix_PlayChannel(-1, g_sound_exp[0], 0);
+
+                            // xuly vu no khi chicken was shooted
+                            for(int ex = 0; ex < 8; ++ex)
+                            {
+                                int x_pos = (pChicken->getRect().x + pChicken->getRect().w/2) - WIDTH_FRAME_EXP/2;
+                                int y_pos = (pChicken->getRect().y + pChicken->getRect().h/2) - HEIGHT_FRAME_EXP/2;
+
+                                exp_main.set_frame(ex);
+                                exp_main.setRect(x_pos, y_pos);
+                                exp_main.show(gRenderer);
+                                SDL_RenderPresent(gRenderer);
+                                //SDL_Delay(10);
+                            }
                         }
                     }
                 }
