@@ -5,6 +5,9 @@
 #include "Chicken.h"
 #include "Explosion.h"
 #include "PlayerPower.h"
+#include "Text.h"
+
+TTF_Font *g_font_text = NULL;
 
 //loads individual image as texture
 SDL_Texture* loadTexture(std::string path);
@@ -76,6 +79,18 @@ void mainProgress()
     playerPower player_power;
     player_power.init(gRenderer);
     player_power.show(gRenderer);
+
+    // handling mark
+    textOb mark_game;
+    mark_game.setTextColor(textOb::WHITE_TEXT);
+
+    unsigned int mark_val = 0;
+
+    std::string str_mark_val = std::to_string(mark_val);
+    std::string strMark = "MARK: " + str_mark_val;
+    mark_game.setText(strMark);
+    mark_game.createGameText(g_font_text, gRenderer);
+    mark_game.Render(gRenderer);
 
     // init exp main
 
@@ -205,6 +220,7 @@ void mainProgress()
                         bool bulShoot = SDLCommonFunc::CheckCollision(pBullet->getRect(), pChicken->getRect());
                         if(bulShoot)
                         {
+                            mark_val += 10;
                             Spacecraft.RemoveWeapon(id);
                             pChicken->set_isLive(false);
 
@@ -246,6 +262,8 @@ void mainProgress()
 
                                 explose(x_pos, y_pos, time_delay);
 
+                                SDL_Delay(1000);
+
                                 Spacecraft.setHeart(cntHeart);
 
                             }
@@ -272,6 +290,13 @@ void mainProgress()
         // lên đọc so sánh PollEvent và WaitEven để xem khác biệt
 
         //if(e.type == SDL_QUIT) break;
+        // show mark_val to screen
+
+        std::string str_mark_val = std::to_string(mark_val);
+        std::string strMark = "MARK : " + str_mark_val;
+        mark_game.setText(strMark);
+        mark_game.createGameText(g_font_text, gRenderer);
+        mark_game.Render(gRenderer);
 
         SDL_RenderPresent(gRenderer);
 
@@ -342,6 +367,11 @@ bool init()
     g_sound_exp[0] = Mix_LoadWAV("Sound//sound_exp.wav");
 
     if(g_sound_bullet[0] == NULL || g_sound_bullet[1] == NULL || g_sound_exp[0] == NULL) return false;
+
+    if(TTF_Init() == -1) success = false;
+
+    g_font_text = TTF_OpenFont("Font//font1.ttf", 20);
+    if(g_font_text == NULL) success = false;
 
     return success;
 }

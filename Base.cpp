@@ -68,6 +68,7 @@ void baseOb::clean()
 
 void baseOb::Render(SDL_Renderer* renderer, const SDL_Rect* rectPos)
 {
+    //if(object!= NULL) cout << "load successfully!" << endl;
     SDL_Rect Rect_ = {rectOb.x, rectOb.y, rectOb.w, rectOb.h};
     SDL_RenderCopy(renderer, object, rectPos, &Rect_);
 }
