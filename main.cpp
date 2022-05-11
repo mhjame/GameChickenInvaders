@@ -14,10 +14,39 @@ SDL_Renderer* gRenderer = NULL;
 bool init();
 bool loadMedia();
 void close();
+Explosion exp_main;
+void explose();
+void mainProgress();
+
+int main(int argc, char* argv[])
+{
+    if(!init())
+    {
+        printf("Failed to initialize!\n");
+    }
+    else
+    {
+        //thu();
+        mainProgress();
+        close();
+    }
+    return 0;
+}
+
+void explose(int &x_pos, int &y_pos, int& time_delay)
+{
+    for(int ex = 0; ex < 8; ++ex)
+    {
+        exp_main.set_frame(ex);
+        exp_main.setRect(x_pos, y_pos);
+        exp_main.show(gRenderer);
+        SDL_RenderPresent(gRenderer);
+        SDL_Delay(time_delay);
+    }
+}
 
 void mainProgress()
 {
-
     // main loop flag
     bool quit = false;
 
@@ -45,7 +74,6 @@ void mainProgress()
 
     // init exp main
 
-    Explosion exp_main;
     bool ret = exp_main.loadTexture("Image//exp.png", gRenderer);
     exp_main.set_clip();
     if(!ret) return;
@@ -126,17 +154,6 @@ void mainProgress()
             if(pChicken)
             {
                 if(pChicken->get_isLive() == false){continue;}
-                /*SDL_Rect srcRect = pChicken->getSrcRect();
-                srcRect.x += CHICKEN_W;
-                int lim_x = pChicken->getRect().w;
-
-                if(srcRect.x >= lim_x)
-                {
-                    srcRect.x = 0;
-                    srcRect.y = 0;
-                    srcRect.w = CHICKEN_W;
-                    srcRect.h = CHICKEN_H;
-                }*/
 
                 pChicken->HandleMove(SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -151,20 +168,12 @@ void mainProgress()
                 {
                     Mix_PlayChannel(-1, g_sound_exp[0], 0);
                     // xuly vu no spacecraft and chicken
-                    for(int ex = 0; ex < 8; ++ex)
-                    {
-                        int x_pos = (Spacecraft.getRect().x + Spacecraft.getRect().w/2) - WIDTH_FRAME_EXP/2;
-                        int y_pos = (Spacecraft.getRect().y + Spacecraft.getRect().h/2) - HEIGHT_FRAME_EXP/2;
 
-                        exp_main.set_frame(ex);
-                        exp_main.setRect(x_pos, y_pos);
-                        exp_main.show(gRenderer);
-                        SDL_RenderPresent(gRenderer);
-                        SDL_Delay(100);
-                    }
+                    int x_pos = (Spacecraft.getRect().x + Spacecraft.getRect().w/2) - WIDTH_FRAME_EXP/2;
+                    int y_pos = (Spacecraft.getRect().y + Spacecraft.getRect().h/2) - HEIGHT_FRAME_EXP/2;
+                    int time_delay = 100;
+                    explose(x_pos, y_pos, time_delay);
 
-                    //SDL_Delay(500);
-                    //cout << "have collision - game over!" << endl;
                     delete [] pChickens;
 
                     close();
@@ -192,20 +201,12 @@ void mainProgress()
                             Spacecraft.RemoveWeapon(id);
                             pChicken->set_isLive(false);
 
-                            Mix_PlayChannel(-1, g_sound_exp[0], 0);
-
                             // xuly vu no khi chicken was shooted
-                            for(int ex = 0; ex < 8; ++ex)
-                            {
-                                int x_pos = (pChicken->getRect().x + pChicken->getRect().w/2) - WIDTH_FRAME_EXP/2;
-                                int y_pos = (pChicken->getRect().y + pChicken->getRect().h/2) - HEIGHT_FRAME_EXP/2;
-
-                                exp_main.set_frame(ex);
-                                exp_main.setRect(x_pos, y_pos);
-                                exp_main.show(gRenderer);
-                                SDL_RenderPresent(gRenderer);
-                                //SDL_Delay(10);
-                            }
+                            Mix_PlayChannel(-1, g_sound_exp[0], 0);
+                            int x_pos = (pChicken->getRect().x + pChicken->getRect().w/2) - WIDTH_FRAME_EXP/2;
+                            int y_pos = (pChicken->getRect().y + pChicken->getRect().h/2) - HEIGHT_FRAME_EXP/2;
+                            int time_delay = 0;
+                            explose(x_pos, y_pos, time_delay);
                         }
                     }
                 }
@@ -227,10 +228,28 @@ void mainProgress()
                             cout << cntHeart << endl;
                             if(cntHeart > 0)
                             {
+                                // Egg return to chicken when crash spacecraft
+                                int pWX = pChicken->getRect().x + pChicken->getRect().w/2;
+                                int pWY = pChicken->getRect().y + pChicken->getRect().h + 5;
+                                pEgg->setRect(pWX, pWY);
+
+                                int x_pos = (Spacecraft.getRect().x + Spacecraft.getRect().w/2) - WIDTH_FRAME_EXP/2;
+                                int y_pos = (Spacecraft.getRect().y + Spacecraft.getRect().h/2) - HEIGHT_FRAME_EXP/2;
+                                int time_delay = 0;
+
+                                explose(x_pos, y_pos, time_delay);
+
                                 Spacecraft.setHeart(cntHeart);
+
                             }
                             else
                             {
+                                Mix_PlayChannel(-1, g_sound_exp[0], 0);
+                                int x_pos = (Spacecraft.getRect().x + Spacecraft.getRect().w/2) - WIDTH_FRAME_EXP/2;
+                                int y_pos = (Spacecraft.getRect().y + Spacecraft.getRect().h/2) - HEIGHT_FRAME_EXP/2;
+                                int time_delay = 100;
+
+                                explose(x_pos, y_pos, time_delay);
                                 cout << "your spacecraft was crash" << endl;
                                 SDL_Delay(1000);
                                 return;
@@ -257,21 +276,6 @@ void mainProgress()
     }
 
     delete [] pChickens;
-}
-
-int main(int argc, char* argv[])
-{
-    if(!init())
-    {
-        printf("Failed to initialize!\n");
-    }
-    else
-    {
-        //thu();
-        mainProgress();
-        close();
-    }
-    return 0;
 }
 
 bool init()
