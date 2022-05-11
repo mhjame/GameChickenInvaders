@@ -4,6 +4,7 @@
 #include "Weapon.h"
 #include "Chicken.h"
 #include "Explosion.h"
+#include "PlayerPower.h"
 
 //loads individual image as texture
 SDL_Texture* loadTexture(std::string path);
@@ -26,7 +27,6 @@ int main(int argc, char* argv[])
     }
     else
     {
-        //thu();
         mainProgress();
         close();
     }
@@ -72,6 +72,11 @@ void mainProgress()
 
     SDL_RenderCopy(gRenderer, gBackground, NULL, &BackgroundRect);
 
+    // make cnt heart
+    playerPower player_power;
+    player_power.init(gRenderer);
+    player_power.show(gRenderer);
+
     // init exp main
 
     bool ret = exp_main.loadTexture("Image//exp.png", gRenderer);
@@ -111,8 +116,8 @@ void mainProgress()
     }
 
 
-    int countHeart = 30;
-    Spacecraft.setHeart(countHeart);
+    //int countHeart = 30;
+    //Spacecraft.setHeart(countHeart);
 
     while(Spacecraft.inside(0,0, SCREEN_WIDTH, SCREEN_HEIGHT))
     {
@@ -132,6 +137,8 @@ void mainProgress()
         {
             BackgroundRect.y = 0;
         }
+
+        player_power.show(gRenderer);
 
         Spacecraft.Render(gRenderer);
         //SDL_RenderPresent(gRenderer);
@@ -223,9 +230,9 @@ void mainProgress()
                         bool eggShoot = SDLCommonFunc::CheckCollision(pEgg->getRect(), Spacecraft.getRect());
                         if(eggShoot)
                         {
-                            int cntHeart = Spacecraft.getHeart();
-                            cntHeart-= 1;
-                            cout << cntHeart << endl;
+                            player_power.decrease();
+                            int cntHeart = player_power.getNumber();
+
                             if(cntHeart > 0)
                             {
                                 // Egg return to chicken when crash spacecraft
@@ -272,7 +279,6 @@ void mainProgress()
         {
             continue;
         }
-
     }
 
     delete [] pChickens;
