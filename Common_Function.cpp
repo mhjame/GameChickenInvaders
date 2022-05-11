@@ -1,5 +1,5 @@
 #include "Common_Function.h"
-
+#include "Text.h"
 
 SDL_Texture* SDLCommonFunc::loadTexture(std::string path, SDL_Renderer* renderer)
 {
@@ -29,6 +29,12 @@ SDL_Texture* SDLCommonFunc::loadTexture(std::string path, SDL_Renderer* renderer
         }
     }
     return newTexture;
+}
+
+bool SDLCommonFunc::checkFocusWithRect(int x, int y, SDL_Rect &rect)
+{
+    if(x >= rect.x && x <= rect.x + rect.w && y >= rect.y && y <= rect.y + rect.h) return true;
+    return false;
 }
 
 bool SDLCommonFunc::CheckCollision(const SDL_Rect& object1, const SDL_Rect& object2)
@@ -117,3 +123,109 @@ bool SDLCommonFunc::CheckCollision(const SDL_Rect& object1, const SDL_Rect& obje
 
       return false;
 }
+
+
+
+int SDLCommonFunc::showMenu(SDL_Renderer *renderer, TTF_Font* font)
+{
+    g_img_menu = SDLCommonFunc::loadTexture("Image//menu.png", renderer);
+    if(g_img_menu == NULL)
+    {
+        return 1;
+    }
+
+    const int cntMenuItem = 2;
+    SDL_Rect pos_arr[cntMenuItem];
+    pos_arr[0].x = SCREEN_WIDTH/2 - 100;
+    pos_arr[0].y = SCREEN_HEIGHT*2/3;
+
+    pos_arr[1].x = SCREEN_WIDTH/2 -100 ;
+    pos_arr[1].y = SCREEN_HEIGHT*2/3 + 50;
+
+    textOb text_menu[cntMenuItem];
+    text_menu[0].setText("PLAY GAME");
+    text_menu[0].setTextColor(textOb::BLACK_TEXT);
+    text_menu[0].setRect(pos_arr[0].x, pos_arr[0].y);
+
+    text_menu[1].setText("EXIT");
+    text_menu[1].setTextColor(textOb::BLACK_TEXT);
+    text_menu[1].setRect(pos_arr[1].x, pos_arr[1].y);
+
+    bool selected[cntMenuItem] = {0, 0};
+    int xm = 0;
+    int ym = 0;
+
+    SDL_Event m_event;
+    while(true)
+    {
+        SDL_RenderCopy(renderer, g_img_menu, NULL, NULL);
+        for(int i = 0; i < cntMenuItem; ++i)
+        {
+            text_menu[i].createGameText(font, renderer);
+        }
+
+        while(SDL_PollEvent(&m_event))
+        {
+            switch(m_event.type)
+            {
+            case SDL_QUIT:
+                return 1;
+            case SDL_MOUSEMOTION:
+                {
+                    xm = m_event.motion.x;
+                    ym = m_event.motion.y;
+
+                    for(int i = 0; i < cntMenuItem; ++i)
+                    {
+                        SDL_Rect rect = text_menu[i].getRect();
+                        if(checkFocusWithRect(xm, ym, rect))
+                        {
+                            if(selected[i] == false){selected[i] = true;}
+                            text_menu[i].setTextColor(textOb::WHITE_TEXT);
+                            text_menu[i].createGameText(font, renderer);
+                            //SDL_RenderPresent(renderer);
+                        }
+                        else
+                        {
+                            if(selected[i] == true)
+                            {
+                                selected[i] == false;
+                                text_menu[i].setTextColor(textOb::BLACK_TEXT);
+                                text_menu[i].createGameText(font, renderer);
+                            }
+                        }
+                    }
+                }
+            case SDL_MOUSEBUTTONDOWN:
+                if(m_event.button.button == SDL_BUTTON_LEFT)
+                {
+                    xm = m_event.button.x;
+                    ym = m_event.button.y;
+
+                    for(int i = 0; i < cntMenuItem; ++i)
+                    {
+                        SDL_Rect rect = text_menu[i].getRect();
+                        if(checkFocusWithRect(xm, ym, rect))
+                        {
+                            return i;
+                        }
+                    }
+                }
+                break;
+
+
+            case SDL_KEYDOWN:
+                if(m_event.key.keysym.sym == SDLK_ESCAPE)
+                {
+                    return 1; //exit
+                    break;
+                }
+            default:
+                break;
+            }
+        }
+        SDL_RenderPresent(renderer);
+    }
+    return 1;
+}
+

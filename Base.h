@@ -3,6 +3,7 @@
 
 #include "Common_Function.h"
 
+
 class baseOb
 {
 /// nếu để private các lớp con kế thừa nó muốn đọc sẽ không đọc được

@@ -8,6 +8,7 @@
 #include "Text.h"
 
 TTF_Font *g_font_text = NULL;
+TTF_Font *g_menu_text = NULL;
 
 //loads individual image as texture
 SDL_Texture* loadTexture(std::string path);
@@ -50,8 +51,10 @@ void explose(int &x_pos, int &y_pos, int& time_delay)
 
 void mainProgress()
 {
+    int ret_menu = SDLCommonFunc::showMenu(gRenderer, g_menu_text);
     // main loop flag
     bool quit = false;
+    if(ret_menu == 1){quit = true;}
 
     //Event handler
     //SDL_Event e;
@@ -90,8 +93,10 @@ void mainProgress()
     std::string strMark = "MARK: " + str_mark_val;
     mark_game.setText(strMark);
     mark_game.createGameText(g_font_text, gRenderer);
-    mark_game.Render(gRenderer);
+    //mark_game.Render(gRenderer);
 
+    textOb time_game;
+    time_game.setTextColor(textOb::WHITE_TEXT);
     // init exp main
 
     bool ret = exp_main.loadTexture("Image//exp.png", gRenderer);
@@ -134,7 +139,8 @@ void mainProgress()
     //int countHeart = 30;
     //Spacecraft.setHeart(countHeart);
 
-    while(Spacecraft.inside(0,0, SCREEN_WIDTH, SCREEN_HEIGHT))
+    //Spacecraft.inside(0,0, SCREEN_WIDTH, SCREEN_HEIGHT)
+    while(quit == false)
     {
         // apply backgound
         //background_y += 2;
@@ -160,6 +166,7 @@ void mainProgress()
 
         if(gEvent.type == SDL_QUIT)
         {
+            quit = true;
             break;
         }
 
@@ -286,6 +293,17 @@ void mainProgress()
             }
         }
 
+        // show time for game
+        std::string str_time = "TIME : ";
+        Uint32 time_val = SDL_GetTicks()/1000;
+        str_time += std::to_string(time_val);
+        time_game.setText(str_time);
+        int gX_pos = 25;
+        int gY_pos = 100;
+
+        time_game.setRect(gX_pos, gY_pos);
+        time_game.createGameText(g_font_text, gRenderer);
+
         // SDL_WaitEvent - nó đợi vô thời hạn
         // lên đọc so sánh PollEvent và WaitEven để xem khác biệt
 
@@ -372,6 +390,9 @@ bool init()
 
     g_font_text = TTF_OpenFont("Font//font1.ttf", 20);
     if(g_font_text == NULL) success = false;
+
+    g_menu_text = TTF_OpenFont("Font//font1.ttf", 40);
+    if(g_menu_text == NULL) success = false;
 
     return success;
 }

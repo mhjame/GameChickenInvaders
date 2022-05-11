@@ -44,4 +44,5 @@ void textOb::createGameText(TTF_Font *font, SDL_Renderer *renderer)
         rectOb.w = surfaceMessage->w;
         rectOb.h = surfaceMessage->h;
     }
+    this->Render(renderer);
 }

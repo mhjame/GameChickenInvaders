@@ -1,11 +1,13 @@
 #ifndef COMMON_FUNCTION_H_INCLUDED
 #define COMMON_FUNCTION_H_INCLUDED
 #include <SDL_mixer.h>
+
 /// where put every function or figure in general process
 
 #include <iostream>
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 
 using namespace std;
 
@@ -42,10 +44,14 @@ static SDL_Texture* gSpacecraft = NULL;
 static Mix_Chunk* g_sound_bullet[2];
 static Mix_Chunk* g_sound_exp[2];
 
+static SDL_Texture* g_img_menu = NULL;
+
 namespace SDLCommonFunc
 {
     SDL_Texture* loadTexture(std::string path, SDL_Renderer* renderer);
     bool CheckCollision(const SDL_Rect &object1, const SDL_Rect &object2);
+    int showMenu(SDL_Renderer *renderer, TTF_Font* font);
+    bool checkFocusWithRect(int x, int y, SDL_Rect &rect);
 }
 
 #endif // COMMON_FUNCTION_H_INCLUDED
