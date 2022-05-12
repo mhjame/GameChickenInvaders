@@ -1,8 +1,6 @@
 #include "chicken.h"
 #include "Common_Function.h"
-
 using namespace std;
-
 Chicken::Chicken()
 {
     x_val_ = 0;
@@ -27,10 +25,8 @@ Chicken::~Chicken()
             }
         }
     }
-
     pWeaponList.clear();
 }
-
 void Chicken::initWeapon(weaponOb* pWeapon, SDL_Renderer* renderer)
 {
     if(pWeapon != NULL)
@@ -41,7 +37,6 @@ void Chicken::initWeapon(weaponOb* pWeapon, SDL_Renderer* renderer)
             pWeapon->setIsMove(true);
             int pWX = this->getRect().x + this->getRect().w/2;
             int pWY = this->getRect().y + this->getRect().h + 5;
-
             pWeapon->setRect(pWX, pWY);
             pWeapon->set_y_val_(20);
             pWeaponList.push_back(pWeapon);
@@ -49,7 +44,6 @@ void Chicken::initWeapon(weaponOb* pWeapon, SDL_Renderer* renderer)
         }
     }
 }
-
 void Chicken::useWeapon(SDL_Renderer* renderer, const int& x_limit, const int& y_limit)
 {
     for(int i = 0; i < this->pWeaponList.size(); ++i)
@@ -60,7 +54,6 @@ void Chicken::useWeapon(SDL_Renderer* renderer, const int& x_limit, const int& y
             if(pWeapon->getIsMove())
             {
                 SDL_Rect pRect = pWeapon->getRect();
-
                 pWeapon->Render(renderer, &pRect);
                 pWeapon->handleMoveChickenBullet(x_limit, y_limit);
                  //cout << this->getRect().x << " "<< this->getRect().y << " " << this->getRect().w << " " << this->getRect().h << endl;
@@ -71,11 +64,8 @@ void Chicken::useWeapon(SDL_Renderer* renderer, const int& x_limit, const int& y
                 int pWY = rectOb.y + rectOb.h + 5;
                 pWeapon->setRect(pWX, pWY);
                 pWeapon->setIsMove(true);
-
             }
-
             //cout << this->getRect().x << " "<< this->getRect().y << " " << this->getRect().w << " " << this->getRect().h << endl;
-
             //cout << 1 << " " << pWX << " " << pWY << endl;
             pWeapon->Render(renderer);
             //SDL_RenderPresent(renderer);
@@ -83,26 +73,20 @@ void Chicken::useWeapon(SDL_Renderer* renderer, const int& x_limit, const int& y
         }
     }
 }
-
 void Chicken::HandleMove(const int& x_border, const int& y_border)
 {
     if(rectOb.x <= 0 || rectOb.x >= x_border)
     {
         if(status == true) set_status(false);
         else set_status(true);
-
         int rand_y = rand()%400;
-
         if(rand_y > y_border - 200)
         {
             rand_y = y_border - 100;
         }
-
         rectOb.y = rand_y;
         //cout << rand_y << " " << rectOb.y << endl;
-
         //cout << y_border<< endl;
-
     }
     if(status == true)
     {
@@ -116,6 +100,8 @@ void Chicken::HandleMove(const int& x_border, const int& y_border)
     SDL_Delay(5);
 }
 
+
+///
 void Chicken::set_clip()
 {
     for(int i = 0; i < 18; ++i)

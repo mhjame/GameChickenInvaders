@@ -52,6 +52,8 @@ bool baseOb::loadTexture(std::string path, SDL_Renderer* renderer)
         }
     }
     object = newTexture;
+    //if(object != NULL) cout << "load successful" << endl;
+
     return object != NULL;
 }
 
