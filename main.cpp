@@ -22,7 +22,7 @@ void close();
 Explosion exp_main;
 void explose();
 void mainProgress();
-
+void thu();
 int main(int argc, char* argv[])
 {
     if(!init())
@@ -31,6 +31,7 @@ int main(int argc, char* argv[])
     }
     else
     {
+        //thu();
         mainProgress();
         close();
     }
@@ -47,6 +48,42 @@ void explose(int &x_pos, int &y_pos, int& time_delay)
         SDL_RenderPresent(gRenderer);
         SDL_Delay(time_delay);
     }
+}
+
+void chickenFly(int &x_pos, int&y_pos, int& time_delay, Chicken *pChicken)
+{
+    for(int chic = 0; chic < 18; ++chic)
+    {
+        pChicken->set_frame(chic);
+        pChicken->setRect(x_pos, y_pos);
+        pChicken->show(gRenderer);
+        SDL_RenderPresent(gRenderer);
+        SDL_Delay(time_delay);
+    }
+}
+
+void thu()
+{
+    SDL_Rect BackgroundRect;
+    BackgroundRect.x = 0;
+    BackgroundRect.y = 0;
+    BackgroundRect.w = BACKGROUND_WIDTH;
+    BackgroundRect.h = BACKGROUND_HEIGHT;
+    gBackground = SDLCommonFunc::loadTexture("Image//background.png", gRenderer);
+    SDL_RenderCopy(gRenderer, gBackground, NULL, &BackgroundRect);
+
+    SDL_RenderPresent(gRenderer);
+
+    Chicken *pChicken = new Chicken;
+
+    bool ret = pChicken->loadTexture("Image//chicken_red1.png", gRenderer);
+    if(ret == false) {
+        return;
+    }
+    pChicken->Render(gRenderer);
+    SDL_RenderPresent(gRenderer);
+
+    SDL_Delay(2000);
 }
 
 void mainProgress()
@@ -115,8 +152,8 @@ void mainProgress()
         if(ret == false) {
             return;
         }
-        //pChicken->Render(gRenderer);
-        //SDL_RenderPresent(gRenderer);
+        pChicken->Render(gRenderer);
+        SDL_RenderPresent(gRenderer);
 
         int pCX = 0 + i*100;
         int pCY = 0;
@@ -177,9 +214,10 @@ void mainProgress()
         //cout << Spacecraft.getWeaponList().size() << endl;
         // Run Chicken
 
-        for(int t = 1; t < NUM_CHICKENS; ++t)
+        for(int t = 0; t < NUM_CHICKENS; ++t)
         {
             Chicken *pChicken = (pChickens + t);
+            //cout << "chic: " << pChicken->getRect().w << " " << pChicken->getRect().h << endl;
             if(pChicken)
             {
                 if(pChicken->get_isLive() == false){continue;}
@@ -190,6 +228,12 @@ void mainProgress()
                 pChicken->useWeapon(gRenderer, SCREEN_WIDTH, SCREEN_HEIGHT);
                 //p_Weapon_chicken->Render(gRenderer);
                 pChicken->Render(gRenderer);
+                /**
+                int c_x_pos = pChicken->getRect().x;
+                int c_y_pos = pChicken->getRect().y;
+                int c_time_delay = 1000;
+
+                chickenFly(c_x_pos, c_y_pos, c_time_delay, pChicken);**/
                 //SDL_RenderPresent(gRenderer);
 
                 bool is_col = SDLCommonFunc::CheckCollision(Spacecraft.getRect(), pChicken->getRect());
@@ -324,6 +368,7 @@ void mainProgress()
         }
     }
 
+
     delete [] pChickens;
 }
 
@@ -341,7 +386,7 @@ bool init()
     else
     {
         // Create window
-        gWindow = SDL_CreateWindow("SDL Turorial", SDL_WINDOWPOS_UNDEFINED,
+        gWindow = SDL_CreateWindow("21020068 Chicken Invaders", SDL_WINDOWPOS_UNDEFINED,
                                    SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 
         if(gWindow == NULL)
