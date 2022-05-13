@@ -5,11 +5,6 @@
 #include "Weapon.h"
 #include <vector>
 
-///
-const int WIDTH_FRAME_CHICKEN = 75;
-const int HEIGHT_FRAME_CHICKEN = 68;
-const int NUMBER_OF_CFRAME = 18;
-
 class Chicken: public baseOb
 {
 public:
@@ -36,22 +31,12 @@ public:
     void initWeapon(weaponOb* pWeapon, SDL_Renderer* renderer);
     void useWeapon(SDL_Renderer* renderer, const int& x_limit, const int& y_limit);
 
-    ///
-    void set_clip();
-    void show(SDL_Renderer *renderer);
-
-    void set_frame(const int &frame_){this->frame = frame_;}
-    int get_frame() const{return this->frame;}
-
 private:
     int x_val_;
     int y_val_;
     bool status;
     bool isLive;
     std::vector <weaponOb*> pWeaponList; // 1 vector con trỏ
-
-    int frame;
-    SDL_Rect clip_[NUMBER_OF_CFRAME];
 };
 
 #endif // CHICKEN_H_INCLUDED

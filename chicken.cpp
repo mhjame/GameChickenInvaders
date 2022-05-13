@@ -8,7 +8,6 @@ Chicken::Chicken()
 
     rectOb.x = SCREEN_WIDTH;
     rectOb.y = 0;
-    frame = 18;
 }
 
 Chicken::~Chicken()
@@ -98,32 +97,4 @@ void Chicken::HandleMove(const int& x_border, const int& y_border)
     }
     //SDL_Delay(10);
     SDL_Delay(5);
-}
-
-
-///
-void Chicken::set_clip()
-{
-    for(int i = 0; i < 18; ++i)
-    {
-        clip_[i].x = i*WIDTH_FRAME_CHICKEN;
-        clip_[i].y = 0;
-        clip_[i].w = WIDTH_FRAME_CHICKEN;
-        clip_[i].h = HEIGHT_FRAME_CHICKEN;
-    }
-}
-
-void Chicken::show(SDL_Renderer *renderer)
-{
-    if(frame >= 18)
-    {
-        frame = 0;
-    }
-    SDL_Rect desRect = {rectOb.x, rectOb.y, WIDTH_FRAME_CHICKEN, HEIGHT_FRAME_CHICKEN};
-    SDL_RenderCopy(renderer, object, &clip_[frame], &desRect);
-}
-
-void Chicken::HandleInputAction(SDL_Event &events)
-{
-
 }

@@ -6,12 +6,19 @@
 #include "Explosion.h"
 #include "PlayerPower.h"
 #include "Text.h"
+
 TTF_Font *g_font_text = NULL;
 TTF_Font *g_menu_text = NULL;
+TTF_Font *g_game_over = NULL;
+
 //loads individual image as texture
 SDL_Texture* loadTexture(std::string path);
 //the wwindow renderer
 SDL_Renderer* gRenderer = NULL;
+
+textOb game_over;
+textOb game_win;
+
 bool init();
 bool loadMedia();
 void close();
@@ -19,42 +26,8 @@ Explosion exp_main;
 void explose();
 void mainProgress();
 
-void chickenFly(int &x_pos, int&y_pos, int& time_delay, Chicken *pChicken)
-{
-    for(int chic = 0; chic < 18; ++chic)
-    {
-        pChicken->set_frame(chic);
-        pChicken->setRect(x_pos, y_pos);
-        pChicken->show(gRenderer);
-        SDL_RenderPresent(gRenderer);
-        SDL_Delay(time_delay);
-    }
-}
-
-void thu()
-{
-    SDL_Rect BackgroundRect;
-    BackgroundRect.x = 0;
-    BackgroundRect.y = 0;
-    BackgroundRect.w = BACKGROUND_WIDTH;
-    BackgroundRect.h = BACKGROUND_HEIGHT;
-    gBackground = SDLCommonFunc::loadTexture("Image//background.png", gRenderer);
-    SDL_RenderCopy(gRenderer, gBackground, NULL, &BackgroundRect);
-
-    Chicken *pChicken = new Chicken;
-    bool ret = pChicken->loadTexture("Image//chicken_red.png", gRenderer);
-    pChicken->set_clip();
-    if(!ret){cout << "load chicken fail" << endl; return;}
-
-    SDL_Rect rect = pChicken->getRect();
-    cout << rect.w << " " << rect.w/18 << " " << rect.h << endl;
-
-    int xp = 0;
-    int yp = 0;
-    int time_delay = 100;
-    int loop = 20;
-   // while(loop--)(chickenFly(xp, yp, time_delay, pChicken));
-}
+void winGame();
+void endGame();
 
 int main(int argc, char* argv[])
 {
@@ -64,12 +37,30 @@ int main(int argc, char* argv[])
     }
     else
     {
-        //thu();
         mainProgress();
         close();
     }
     return 0;
 }
+
+void winGame()
+{
+    game_win.createGameText(g_game_over, gRenderer);
+    SDL_RenderPresent(gRenderer);
+    SDL_Delay(1000);
+
+    mainProgress();
+}
+
+void endGame()
+{
+    game_over.createGameText(g_game_over, gRenderer);
+    SDL_RenderPresent(gRenderer);
+    SDL_Delay(1000);
+
+    mainProgress();
+}
+
 void explose(int &x_pos, int &y_pos, int& time_delay)
 {
     for(int ex = 0; ex < 8; ++ex)
@@ -88,6 +79,7 @@ void mainProgress()
     // main loop flag
     bool quit = false;
     if(ret_menu == 1){quit = true;}
+
     //Event handler
     //SDL_Event e;
     spaceship Spacecraft(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
@@ -103,10 +95,12 @@ void mainProgress()
     BackgroundRect.h = BACKGROUND_HEIGHT;
     gBackground = SDLCommonFunc::loadTexture("Image//background.png", gRenderer);
     SDL_RenderCopy(gRenderer, gBackground, NULL, &BackgroundRect);
+
     // make cnt heart
     playerPower player_power;
     player_power.init(gRenderer);
     player_power.show(gRenderer);
+
     // handling mark
     textOb mark_game;
     mark_game.setTextColor(textOb::WHITE_TEXT);
@@ -116,9 +110,24 @@ void mainProgress()
     mark_game.setText(strMark);
     mark_game.createGameText(g_font_text, gRenderer);
     //mark_game.Render(gRenderer);
+
     textOb time_game;
     time_game.setTextColor(textOb::WHITE_TEXT);
     // init exp main
+
+    int scrW = SCREEN_WIDTH/3;
+    int scrH = SCREEN_HEIGHT/3;
+
+    game_over.setRect(scrW, scrH);
+    game_over.setTextColor(textOb::WHITE_TEXT);
+    game_over.setText("GAME OVER!");
+
+    game_win.setRect(scrW, scrH);
+    game_win.setTextColor(textOb::WHITE_TEXT);
+    game_win.setText("YOU WIN!");
+
+    int cntChickenDie = 0;
+
     bool ret = exp_main.loadTexture("Image//exp.png", gRenderer);
     exp_main.set_clip();
     if(!ret) return;
@@ -134,7 +143,6 @@ void mainProgress()
         }
         //pChicken->Render(gRenderer);
         //SDL_RenderPresent(gRenderer);
-
         int pCX = 0 + i*100;
         int pCY = 0;
         //int pCY = rand()%400;
@@ -150,6 +158,7 @@ void mainProgress()
     }
     //int countHeart = 30;
     //Spacecraft.setHeart(countHeart);
+
     //Spacecraft.inside(0,0, SCREEN_WIDTH, SCREEN_HEIGHT)
     while(quit == false)
     {
@@ -168,17 +177,18 @@ void mainProgress()
         player_power.show(gRenderer);
         Spacecraft.Render(gRenderer);
         //SDL_RenderPresent(gRenderer);
+
         if(gEvent.type == SDL_QUIT)
         {
             quit = true;
             break;
         }
+
         Spacecraft.handleEvent(gEvent, gRenderer, g_sound_bullet);
         // truyền g_sound_bullet thì ok, g_sound_bullet[2] thì ko đc
         Spacecraft.makeWeaponList(gRenderer); // make bullet list of spacecraft
         //cout << Spacecraft.getWeaponList().size() << endl;
         // Run Chicken
-
         for(int t = 1; t < NUM_CHICKENS; ++t)
         {
             Chicken *pChicken = (pChickens + t);
@@ -191,7 +201,6 @@ void mainProgress()
                 //p_Weapon_chicken->Render(gRenderer);
                 pChicken->Render(gRenderer);
                 //SDL_RenderPresent(gRenderer);
-
                 bool is_col = SDLCommonFunc::CheckCollision(Spacecraft.getRect(), pChicken->getRect());
                 if(is_col)
                 {
@@ -201,11 +210,17 @@ void mainProgress()
                     int y_pos = (Spacecraft.getRect().y + Spacecraft.getRect().h/2) - HEIGHT_FRAME_EXP/2;
                     int time_delay = 100;
                     explose(x_pos, y_pos, time_delay);
+
+                    endGame();
+
                     delete [] pChickens;
                     close();
                     return;
                 }
+
                 //xuly đạn bắn
+
+
                 std::vector<weaponOb*> bulletList = Spacecraft.getWeaponList();
                 //cout << Spacecraft.getWeaponList().size() << endl;
                 for(int id = 0; id < bulletList.size(); ++id)
@@ -221,6 +236,9 @@ void mainProgress()
                             mark_val += 10;
                             Spacecraft.RemoveWeapon(id);
                             pChicken->set_isLive(false);
+
+                            cntChickenDie++;
+
                             // xuly vu no khi chicken was shooted
                             Mix_PlayChannel(-1, g_sound_exp[0], 0);
                             int x_pos = (pChicken->getRect().x + pChicken->getRect().w/2) - WIDTH_FRAME_EXP/2;
@@ -228,9 +246,17 @@ void mainProgress()
                             int time_delay = 0;
                             explose(x_pos, y_pos, time_delay);
                         }
+
+                        if(cntChickenDie == 9)
+                        {
+                            winGame();
+                        }
                     }
                 }
+
+
                 // xuly egg shooting spacecraft
+
 
                 std::vector<weaponOb*> eggList = pChicken->getWeaponList();
                 for(int ide = 0; ide < eggList.size(); ++ide)
@@ -263,8 +289,10 @@ void mainProgress()
                                 int y_pos = (Spacecraft.getRect().y + Spacecraft.getRect().h/2) - HEIGHT_FRAME_EXP/2;
                                 int time_delay = 100;
                                 explose(x_pos, y_pos, time_delay);
+
+                                endGame();
+
                                 cout << "your spacecraft was crash" << endl;
-                                SDL_Delay(1000);
                                 return;
                             }
                         }
@@ -272,6 +300,7 @@ void mainProgress()
                 }
             }
         }
+
         // show time for game
         std::string str_time = "TIME : ";
         Uint32 time_val = SDL_GetTicks()/1000;
@@ -279,10 +308,13 @@ void mainProgress()
         time_game.setText(str_time);
         int gX_pos = 25;
         int gY_pos = 100;
+
         time_game.setRect(gX_pos, gY_pos);
         time_game.createGameText(g_font_text, gRenderer);
+
         // SDL_WaitEvent - nó đợi vô thời hạn
         // lên đọc so sánh PollEvent và WaitEven để xem khác biệt
+
         //if(e.type == SDL_QUIT) break;
         // show mark_val to screen
         std::string str_mark_val = std::to_string(mark_val);
@@ -296,10 +328,8 @@ void mainProgress()
             continue;
         }
     }
-
     delete [] pChickens;
 }
-
 bool init()
 {
     // Initialization flag
@@ -315,7 +345,6 @@ bool init()
         // Create window
         gWindow = SDL_CreateWindow("SDL Turorial", SDL_WINDOWPOS_UNDEFINED,
                                    SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-
         if(gWindow == NULL)
         {
             printf("Window could not be create! SDL Error: %s\n", SDL_GetError());
@@ -356,10 +385,16 @@ bool init()
     if(TTF_Init() == -1) success = false;
     g_font_text = TTF_OpenFont("Font//font1.ttf", 20);
     if(g_font_text == NULL) success = false;
+
     g_menu_text = TTF_OpenFont("Font//font1.ttf", 40);
     if(g_menu_text == NULL) success = false;
+
+    g_game_over = TTF_OpenFont("Font//font1.ttf", 60);
+    if(g_game_over == NULL) success = false;
+
     return success;
 }
+
 /**
 After we create our window, we have to create a renderer for our window
 so we can render textures on it. Fortunately this is easily done with a
