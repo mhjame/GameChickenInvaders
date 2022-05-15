@@ -6,6 +6,7 @@
 #include "Explosion.h"
 #include "PlayerPower.h"
 #include "Text.h"
+#include "Boss.h"
 
 TTF_Font *g_font_text = NULL;
 TTF_Font *g_menu_text = NULL;
@@ -75,6 +76,7 @@ void explose(int &x_pos, int &y_pos, int& time_delay)
 
 void mainProgress()
 {
+
     int ret_menu = SDLCommonFunc::showMenu(gRenderer, g_menu_text);
     // main loop flag
     bool quit = false;
@@ -156,6 +158,19 @@ void mainProgress()
         p_Weapon->Render(gRenderer);
         SDL_RenderPresent(gRenderer);*/
     }
+
+
+    // make chicken_boss
+    Boss *pBoss = new Boss();
+    bool retBoss = pBoss->loadTexture("Image//chicken_boss.png", gRenderer);
+    SDL_RenderPresent(gRenderer);
+    cout << pBoss->getRect().x << " " << pBoss->getRect().y << " " << pBoss->getRect().w << " " << pBoss->getRect().h << endl;
+
+    if(retBoss == false){return;}
+    pBoss->set_x_val(15);
+    weaponOb *p_Weapon_boss = new weaponOb();
+    pBoss->initWeapon(p_Weapon_boss, gRenderer);
+    pBoss->set_isLive(false);
     //int countHeart = 30;
     //Spacecraft.setHeart(countHeart);
 
@@ -249,14 +264,15 @@ void mainProgress()
 
                         if(cntChickenDie == 9)
                         {
-                            winGame();
+                            pBoss->set_isLive(true);
+                            goto L1;
+                            //void handleBoss(pBoss, Spacecraft);
+                            //winGame();
                         }
                     }
                 }
 
-
                 // xuly egg shooting spacecraft
-
 
                 std::vector<weaponOb*> eggList = pChicken->getWeaponList();
                 for(int ide = 0; ide < eggList.size(); ++ide)
@@ -300,6 +316,120 @@ void mainProgress()
                 }
             }
         }
+
+        L1:;
+
+        if(cntChickenDie == 9)
+            {
+                if(pBoss && (pBoss->get_isLive() == true))
+                {
+
+                    pBoss->HandleMove(SCREEN_WIDTH, SCREEN_HEIGHT, 30);
+
+                    int pBX = pBoss->getRect().x + pBoss->getRect().w/2 - pBoss->getHeart()/2;
+                    int pBY = pBoss->getRect().y - 10 ;
+                    int pBH = 5;
+                    int pBW = pBoss->getHeart();
+
+                    pBoss->showHeartBoss(gRenderer, pBX, pBY, pBW, pBH);
+                    //cout << pChicken->getRect().x << " " << pChicken->getRect().y << " " << pChicken->getRect().w << " " << pChicken->getRect().h << endl;
+                    pBoss->useWeapon(gRenderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+                    //p_Weapon_chicken->Render(gRenderer);
+                    pBoss->Render(gRenderer);
+                    //SDL_RenderPresent(gRenderer);
+                    bool is_col = SDLCommonFunc::CheckCollision(Spacecraft.getRect(), pBoss->getRect());
+                    if(is_col)
+                    {
+                        Mix_PlayChannel(-1, g_sound_exp[0], 0);
+                        // xuly vu no spacecraft and chicken
+                        int x_pos = (Spacecraft.getRect().x + Spacecraft.getRect().w/2) - WIDTH_FRAME_EXP/2;
+                        int y_pos = (Spacecraft.getRect().y + Spacecraft.getRect().h/2) - HEIGHT_FRAME_EXP/2;
+                        int time_delay = 100;
+
+                        explose(x_pos, y_pos, time_delay);
+                        endGame();
+                    }
+
+                     //xuly đạn bắn
+
+
+                    std::vector<weaponOb*> bulletList = Spacecraft.getWeaponList();
+                    //cout << Spacecraft.getWeaponList().size() << endl;
+                    for(int id = 0; id < bulletList.size(); ++id)
+                    {
+                        weaponOb *pBullet = bulletList.at(id);
+                        if(pBullet != NULL)
+                        {
+                           // cout << pBullet->getRect().x << " " << pBullet->getRect().y
+                                    //<< " " << pBullet->getRect().w << " " << pBullet->getRect().h << endl;
+                            bool bulShoot = SDLCommonFunc::CheckCollision(pBullet->getRect(), pBoss->getRect());
+                            if(bulShoot)
+                            {
+                                Mix_PlayChannel(-1, g_sound_chicken_hit, 0);
+                                mark_val += 10;
+                                Spacecraft.RemoveWeapon(id);
+                                int bossHeart = pBoss->getHeart();
+                                bossHeart -= 10;
+                                pBoss->setHeart(bossHeart);
+                                if(bossHeart > 0) pBoss->setHeart(bossHeart);
+                                else
+                                {
+                                    // xuly vu no khi chicken was shooted
+                                    Mix_PlayChannel(-1, g_sound_exp[0], 0);
+                                    int x_pos = (pBoss->getRect().x + pBoss->getRect().w/2) - WIDTH_FRAME_EXP/2;
+                                    int y_pos = (pBoss->getRect().y + pBoss->getRect().h/2) - HEIGHT_FRAME_EXP/2;
+                                    int time_delay = 0;
+                                    explose(x_pos, y_pos, time_delay);
+                                    pBoss->set_isLive(false);
+                                    winGame();
+                                }
+                            }
+                        }
+                    }
+
+
+                    std::vector<weaponOb*> bossEggList = pBoss->getWeaponList();
+                    for(int ide = 0; ide < bossEggList.size(); ++ide)
+                    {
+                        weaponOb *pEgg = bossEggList.at(ide);
+                        if(pEgg != NULL)
+                        {
+                            bool eggShoot = SDLCommonFunc::CheckCollision(pEgg->getRect(), Spacecraft.getRect());
+                            if(eggShoot)
+                            {
+                                player_power.decrease();
+                                int cntHeart = player_power.getNumber();
+                                if(cntHeart > 0)
+                                {
+                                    // Egg return to chicken when crash spacecraft
+                                    int pWX = pBoss->getRect().x + pBoss->getRect().w/2;
+                                    int pWY = pBoss->getRect().y + pBoss->getRect().h + 5;
+                                    pEgg->setRect(pWX, pWY);
+                                    int x_pos = (Spacecraft.getRect().x + Spacecraft.getRect().w/2) - WIDTH_FRAME_EXP/2;
+                                    int y_pos = (Spacecraft.getRect().y + Spacecraft.getRect().h/2) - HEIGHT_FRAME_EXP/2;
+                                    int time_delay = 0;
+                                    explose(x_pos, y_pos, time_delay);
+                                    SDL_Delay(1000);
+                                    Spacecraft.setHeart(cntHeart);
+                                }
+                                else
+                                {
+                                    Mix_PlayChannel(-1, g_sound_exp[0], 0);
+                                    int x_pos = (Spacecraft.getRect().x + Spacecraft.getRect().w/2) - WIDTH_FRAME_EXP/2;
+                                    int y_pos = (Spacecraft.getRect().y + Spacecraft.getRect().h/2) - HEIGHT_FRAME_EXP/2;
+                                    int time_delay = 100;
+                                    explose(x_pos, y_pos, time_delay);
+
+                                    endGame();
+
+                                    cout << "your spacecraft was crash" << endl;
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
         // show time for game
         std::string str_time = "TIME : ";
@@ -381,7 +511,13 @@ bool init()
     g_sound_bullet[0] = Mix_LoadWAV("Sound//sound_blaster.wav");
     g_sound_bullet[1] = Mix_LoadWAV("Sound//sound_boron.wav");
     g_sound_exp[0] = Mix_LoadWAV("Sound//sound_exp.wav");
-    if(g_sound_bullet[0] == NULL || g_sound_bullet[1] == NULL || g_sound_exp[0] == NULL) return false;
+    g_sound_start = Mix_LoadMUS("Sound//sound_start.mp3");
+    g_sound_chicken_hit = Mix_LoadWAV("Sound//sound_ChickenHit.wav");
+    g_click = Mix_LoadMUS("Sound//sound_buttonClick.mp3");
+
+    if(g_sound_bullet[0] == NULL || g_sound_bullet[1] == NULL || g_sound_exp[0] == NULL || g_sound_start == NULL
+       || g_sound_chicken_hit == NULL) return false;
+
     if(TTF_Init() == -1) success = false;
     g_font_text = TTF_OpenFont("Font//font1.ttf", 20);
     if(g_font_text == NULL) success = false;

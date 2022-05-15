@@ -43,6 +43,9 @@ static SDL_Texture* gSpacecraft = NULL;
 
 static Mix_Chunk* g_sound_bullet[2];
 static Mix_Chunk* g_sound_exp[2];
+static Mix_Music* g_sound_start;
+static Mix_Chunk* g_sound_chicken_hit;
+static Mix_Music* g_click;
 
 static SDL_Texture* g_img_menu = NULL;
 

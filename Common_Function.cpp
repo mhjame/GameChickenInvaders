@@ -128,6 +128,15 @@ bool SDLCommonFunc::CheckCollision(const SDL_Rect& object1, const SDL_Rect& obje
 
 int SDLCommonFunc::showMenu(SDL_Renderer *renderer, TTF_Font* font)
 {
+    //g_sound_start = Mix_LoadMUS("Sound//sound_start.mp3");
+
+    //if(g_sound_start == NULL) return false;
+    //Mix_PlayMusic(g_sound_start, -1);
+
+    g_click = Mix_LoadMUS("Sound//sound_buttonClick.mp3");
+
+    if(g_click == NULL) return false;
+
     g_img_menu = SDLCommonFunc::loadTexture("Image//menu.png", renderer);
     if(g_img_menu == NULL)
     {
@@ -199,6 +208,7 @@ int SDLCommonFunc::showMenu(SDL_Renderer *renderer, TTF_Font* font)
             case SDL_MOUSEBUTTONDOWN:
                 if(m_event.button.button == SDL_BUTTON_LEFT)
                 {
+                    Mix_PlayMusic(g_click, 0);
                     xm = m_event.button.x;
                     ym = m_event.button.y;
 
