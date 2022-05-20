@@ -162,7 +162,8 @@ void mainProgress()
 
     // make chicken_boss
     Boss *pBoss = new Boss();
-    bool retBoss = pBoss->loadTexture("Image//chicken_boss.png", gRenderer);
+    bool retBoss = pBoss->loadTexture("Image//boss.png", gRenderer);
+
     SDL_RenderPresent(gRenderer);
     cout << pBoss->getRect().x << " " << pBoss->getRect().y << " " << pBoss->getRect().w << " " << pBoss->getRect().h << endl;
 
@@ -171,6 +172,8 @@ void mainProgress()
     weaponOb *p_Weapon_boss = new weaponOb();
     pBoss->initWeapon(p_Weapon_boss, gRenderer);
     pBoss->set_isLive(false);
+    pBoss->set_clips();
+
     //int countHeart = 30;
     //Spacecraft.setHeart(countHeart);
 
@@ -273,6 +276,7 @@ void mainProgress()
                 }
 
                 // xuly egg shooting spacecraft
+                /**
 
                 std::vector<weaponOb*> eggList = pChicken->getWeaponList();
                 for(int ide = 0; ide < eggList.size(); ++ide)
@@ -313,7 +317,7 @@ void mainProgress()
                             }
                         }
                     }
-                }
+                }**/
             }
         }
 
@@ -325,8 +329,9 @@ void mainProgress()
                 {
 
                     pBoss->HandleMove(SCREEN_WIDTH, SCREEN_HEIGHT, 30);
+                    pBoss->Show(gRenderer);
 
-                    int pBX = pBoss->getRect().x + pBoss->getRect().w/2 - pBoss->getHeart()/2;
+                    int pBX = pBoss->getRect().x + WIDTH_BOSS/2 - pBoss->getHeart()/2;
                     int pBY = pBoss->getRect().y - 10 ;
                     int pBH = 5;
                     int pBW = pBoss->getHeart();
@@ -335,7 +340,8 @@ void mainProgress()
                     //cout << pChicken->getRect().x << " " << pChicken->getRect().y << " " << pChicken->getRect().w << " " << pChicken->getRect().h << endl;
                     pBoss->useWeapon(gRenderer, SCREEN_WIDTH, SCREEN_HEIGHT);
                     //p_Weapon_chicken->Render(gRenderer);
-                    pBoss->Render(gRenderer);
+
+                    ///pBoss->Render(gRenderer);
                     //SDL_RenderPresent(gRenderer);
                     bool is_col = SDLCommonFunc::CheckCollision(Spacecraft.getRect(), pBoss->getRect());
                     if(is_col)
@@ -376,8 +382,8 @@ void mainProgress()
                                 {
                                     // xuly vu no khi chicken was shooted
                                     Mix_PlayChannel(-1, g_sound_exp[0], 0);
-                                    int x_pos = (pBoss->getRect().x + pBoss->getRect().w/2) - WIDTH_FRAME_EXP/2;
-                                    int y_pos = (pBoss->getRect().y + pBoss->getRect().h/2) - HEIGHT_FRAME_EXP/2;
+                                    int x_pos = (pBoss->getRect().x + WIDTH_BOSS/2) - WIDTH_FRAME_EXP/2;
+                                    int y_pos = (pBoss->getRect().y + HEIGHT_BOSS/2) - HEIGHT_FRAME_EXP/2;
                                     int time_delay = 0;
                                     explose(x_pos, y_pos, time_delay);
                                     pBoss->set_isLive(false);
@@ -402,8 +408,8 @@ void mainProgress()
                                 if(cntHeart > 0)
                                 {
                                     // Egg return to chicken when crash spacecraft
-                                    int pWX = pBoss->getRect().x + pBoss->getRect().w/2;
-                                    int pWY = pBoss->getRect().y + pBoss->getRect().h + 5;
+                                    int pWX = pBoss->getRect().x + WIDTH_BOSS/2;
+                                    int pWY = pBoss->getRect().y + HEIGHT_BOSS + 5;
                                     pEgg->setRect(pWX, pWY);
                                     int x_pos = (Spacecraft.getRect().x + Spacecraft.getRect().w/2) - WIDTH_FRAME_EXP/2;
                                     int y_pos = (Spacecraft.getRect().y + Spacecraft.getRect().h/2) - HEIGHT_FRAME_EXP/2;

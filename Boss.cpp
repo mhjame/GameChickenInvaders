@@ -55,6 +55,7 @@ void Boss::set_clips()
 
 void Boss::Show(SDL_Renderer *renderer)
 {
+    frame++;
     if(frame >= 10)
     {
         frame = 0;
@@ -97,8 +98,8 @@ void Boss::useWeapon(SDL_Renderer* renderer, const int& x_limit, const int& y_li
             }
             else
             {
-                int pWX = rectOb.x + rectOb.w/2;
-                int pWY = rectOb.y + rectOb.h + 5;
+                int pWX = rectOb.x + WIDTH_BOSS/2;
+                int pWY = rectOb.y + HEIGHT_BOSS + 5;
                 pWeapon->setRect(pWX, pWY);
                 pWeapon->setIsMove(true);
             }
