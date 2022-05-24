@@ -73,8 +73,8 @@ void Boss::initWeapon(weaponOb* pWeapon, SDL_Renderer* renderer)
         if(ret)
         {
             pWeapon->setIsMove(true);
-            int pWX = this->getRect().x + this->getRect().w/2;
-            int pWY = this->getRect().y + this->getRect().h + 5;
+            int pWX = this->getRect().x + WIDTH_BOSS/2;
+            int pWY = this->getRect().y + HEIGHT_BOSS + 5;
             pWeapon->setRect(pWX, pWY);
             pWeapon->set_y_val_(20);
             pWeaponList.push_back(pWeapon);

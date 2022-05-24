@@ -8,6 +8,10 @@ Chicken::Chicken()
 
     rectOb.x = SCREEN_WIDTH;
     rectOb.y = 0;
+
+    status = true;
+
+    frame = 0;
 }
 
 Chicken::~Chicken()
@@ -26,6 +30,38 @@ Chicken::~Chicken()
     }
     pWeaponList.clear();
 }
+
+SDL_Rect Chicken::GetRectFrame()
+{
+    SDL_Rect rect;
+    rect.x = rectOb.x;
+    rect.y = rectOb.y;
+    rect.w = WIDTH_FRAME_CHICKEN;
+    rect.h = HEIGHT_FRAME_CHICKEN;
+}
+
+void Chicken::set_clips()
+{
+    for(int i = 0; i < 18; ++i)
+    {
+        clip_[i].x = i*WIDTH_FRAME_CHICKEN;
+        clip_[i].y = 0;
+        clip_[i].w = WIDTH_FRAME_CHICKEN;
+        clip_[i].h = HEIGHT_FRAME_CHICKEN;
+    }
+}
+
+void Chicken::Show(SDL_Renderer *renderer)
+{
+    this->frame++;
+    if(frame >= 18)
+    {
+        frame = 0;
+    }
+    SDL_Rect desRect = {rectOb.x, rectOb.y, WIDTH_FRAME_CHICKEN, HEIGHT_FRAME_CHICKEN};
+    SDL_RenderCopy(renderer, object, &clip_[frame], &desRect);
+}
+
 void Chicken::initWeapon(weaponOb* pWeapon, SDL_Renderer* renderer)
 {
     if(pWeapon != NULL)
@@ -34,8 +70,8 @@ void Chicken::initWeapon(weaponOb* pWeapon, SDL_Renderer* renderer)
         if(ret)
         {
             pWeapon->setIsMove(true);
-            int pWX = this->getRect().x + this->getRect().w/2;
-            int pWY = this->getRect().y + this->getRect().h + 5;
+            int pWX = this->getRect().x + WIDTH_FRAME_CHICKEN/2;
+            int pWY = this->getRect().y + HEIGHT_FRAME_CHICKEN + 5;
             pWeapon->setRect(pWX, pWY);
             pWeapon->set_y_val_(20);
             pWeaponList.push_back(pWeapon);
@@ -59,8 +95,8 @@ void Chicken::useWeapon(SDL_Renderer* renderer, const int& x_limit, const int& y
             }
             else
             {
-                int pWX = rectOb.x + rectOb.w/2;
-                int pWY = rectOb.y + rectOb.h + 5;
+                int pWX = rectOb.x + WIDTH_FRAME_CHICKEN/2;
+                int pWY = rectOb.y + HEIGHT_FRAME_CHICKEN + 5;
                 pWeapon->setRect(pWX, pWY);
                 pWeapon->setIsMove(true);
             }
@@ -78,15 +114,16 @@ void Chicken::HandleMove(const int& x_border, const int& y_border)
     {
         if(status == true) set_status(false);
         else set_status(true);
+
         int rand_y = rand()%400;
         if(rand_y > y_border - 200)
         {
             rand_y = y_border - 100;
         }
+
         rectOb.y = rand_y;
-        //cout << rand_y << " " << rectOb.y << endl;
-        //cout << y_border<< endl;
     }
+
     if(status == true)
     {
         rectOb.x -= x_val_;
