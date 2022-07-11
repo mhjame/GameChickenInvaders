@@ -1,0 +1,209 @@
+// init exploion object
+    Explosion* exp_spacecraft;
+    bool ret = exp_spacecraft->loadTexture("Image//chicken_red.png", gRenderer);
+    //if(!ret){cout << "load exp wrong"; return;}
+
+
+/*
+                    for(int ex = 0; ex < 8; ++ex)
+                    {
+                        int x_pos = (Spacecraft.getRect().x + Spacecraft.getRect().w/2) - WIDTH_FRAME_EXP/2;
+                        int y_pos = (Spacecraft.getRect().y + Spacecraft.getRect().h/2) - HEIGHT_FRAME_EXP/2;
+
+                        exp_spacecraft->set_frame(ex);
+                        exp_spacecraft->setRect(x_pos, y_pos);
+                        exp_spacecraft->show(gRenderer);
+                        SDL_RenderPresent(gRenderer);
+
+                    }*/
+
+
+                    /*
+void thu()
+{
+    SDL_Rect BackgroundRect;
+    BackgroundRect.x = 0;
+    BackgroundRect.y = 0;
+    BackgroundRect.w = BACKGROUND_WIDTH;
+    BackgroundRect.h = BACKGROUND_HEIGHT;
+    gBackground = SDLCommonFunc::loadTexture("Image//background.png", gRenderer);
+    SDL_RenderCopy(gRenderer, gBackground, NULL, &BackgroundRect);
+
+    Boss boss;
+    boss.loadTexture("Image//boss.png", gRenderer);
+    boss.set_clips();
+    boss.setRect(0, 0);
+    boss.set_y_val(BOSS_SPEED);
+    boss.set_x_val(BOSS_SPEED*3);
+
+    float bossHeart = 100;
+    boss.setHeart(bossHeart);
+
+    weaponOb *pWeapon = new weaponOb();
+    boss.initWeapon(pWeapon, gRenderer);
+
+}*/
+
+
+bool handleBoss(Boss *pBoss, spaceship Spacecraft)
+{
+     while(quit == false)
+    {
+        // apply backgound
+        //background_y += 2;
+        SDL_SetRenderDrawColor(gRenderer, GRAY_COLOR.r, GRAY_COLOR.g, GRAY_COLOR.b, 0);
+        SDL_RenderCopy(gRenderer, gBackground, NULL, &BackgroundRect);
+        SDL_Rect BackgroundRect2 = BackgroundRect;
+        BackgroundRect2.y -= SCREEN_HEIGHT;
+        SDL_RenderCopy(gRenderer, gBackground, NULL, &BackgroundRect2);
+        BackgroundRect.y += 2;
+        if(BackgroundRect.y >= SCREEN_HEIGHT)
+        {
+            BackgroundRect.y = 0;
+        }
+        player_power.show(gRenderer);
+        Spacecraft.Render(gRenderer);
+        //SDL_RenderPresent(gRenderer);
+
+        if(gEvent.type == SDL_QUIT)
+        {
+            quit = true;
+            break;
+        }
+
+        Spacecraft.handleEvent(gEvent, gRenderer, g_sound_bullet);
+        // truyền g_sound_bullet thì ok, g_sound_bullet[2] thì ko đc
+        Spacecraft.makeWeaponList(gRenderer); // make bullet list of spacecraft
+        //cout << Spacecraft.getWeaponList().size() << endl;
+        // Run Chicken
+
+        if(pBoss)
+        {
+            if(pBoss->get_isLive() == false){return true;}
+            pBoss->HandleMove(SCREEN_WIDTH, SCREEN_HEIGHT);
+            //cout << pChicken->getRect().x << " " << pChicken->getRect().y << " " << pChicken->getRect().w << " " << pChicken->getRect().h << endl;
+            pBoss->useWeapon(gRenderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+            //p_Weapon_chicken->Render(gRenderer);
+            pBoss->Render(gRenderer);
+            //SDL_RenderPresent(gRenderer);
+            bool is_col = SDLCommonFunc::CheckCollision(Spacecraft.getRect(), pBoss->getRect());
+            if(is_col)
+            {
+                Mix_PlayChannel(-1, g_sound_exp[0], 0);
+                // xuly vu no spacecraft and chicken
+                int x_pos = (Spacecraft.getRect().x + Spacecraft.getRect().w/2) - WIDTH_FRAME_EXP/2;
+                int y_pos = (Spacecraft.getRect().y + Spacecraft.getRect().h/2) - HEIGHT_FRAME_EXP/2;
+                int time_delay = 100;
+                explose(x_pos, y_pos, time_delay);
+
+                return false;
+            }
+
+            //xuly đạn bắn
+
+
+            std::vector<weaponOb*> bulletList = Spacecraft.getWeaponList();
+            //cout << Spacecraft.getWeaponList().size() << endl;
+            for(int id = 0; id < bulletList.size(); ++id)
+            {
+                weaponOb *pBullet = bulletList.at(id);
+                if(pBullet != NULL)
+                {
+                   // cout << pBullet->getRect().x << " " << pBullet->getRect().y
+                            //<< " " << pBullet->getRect().w << " " << pBullet->getRect().h << endl;
+                    bool bulShoot = SDLCommonFunc::CheckCollision(pBullet->getRect(), pBoss->getRect());
+                    if(bulShoot)
+                    {
+                        mark_val += 10;
+                        Spacecraft.RemoveWeapon(id);
+                        int bossHeart = pBoss->getHeart();
+                        bossHeart -= 5;
+                        if(bossHeart > 0) pBoss->setHeart(bossHeart);
+                        else
+                        {
+                            // xuly vu no khi chicken was shooted
+                            Mix_PlayChannel(-1, g_sound_exp[0], 0);
+                            int x_pos = (pBoss->getRect().x + pBoss->getRect().w/2) - WIDTH_FRAME_EXP/2;
+                            int y_pos = (pBoss->getRect().y + pBoss->getRect().h/2) - HEIGHT_FRAME_EXP/2;
+                            int time_delay = 0;
+                            explose(x_pos, y_pos, time_delay);
+                            winGame();
+                        }
+                    }
+                }
+            }
+
+
+            // xuly egg shooting spacecraft
+
+
+            std::vector<weaponOb*> bossEggList = pBoss->getWeaponList();
+            for(int ide = 0; ide < bossEggList.size(); ++ide)
+            {
+                weaponOb *pEgg = bossEggList.at(ide);
+                if(pEgg != NULL)
+                {
+                    bool eggShoot = SDLCommonFunc::CheckCollision(pEgg->getRect(), Spacecraft.getRect());
+                    if(eggShoot)
+                    {
+                        player_power.decrease();
+                        int cntHeart = player_power.getNumber();
+                        if(cntHeart > 0)
+                        {
+                            // Egg return to chicken when crash spacecraft
+                            int pWX = pBoss->getRect().x + pBoss->getRect().w/2;
+                            int pWY = pBoss->getRect().y + pBoss->getRect().h + 5;
+                            pEgg->setRect(pWX, pWY);
+                            int x_pos = (Spacecraft.getRect().x + Spacecraft.getRect().w/2) - WIDTH_FRAME_EXP/2;
+                            int y_pos = (Spacecraft.getRect().y + Spacecraft.getRect().h/2) - HEIGHT_FRAME_EXP/2;
+                            int time_delay = 0;
+                            explose(x_pos, y_pos, time_delay);
+                            SDL_Delay(1000);
+                            Spacecraft.setHeart(cntHeart);
+                        }
+                        else
+                        {
+                            Mix_PlayChannel(-1, g_sound_exp[0], 0);
+                            int x_pos = (Spacecraft.getRect().x + Spacecraft.getRect().w/2) - WIDTH_FRAME_EXP/2;
+                            int y_pos = (Spacecraft.getRect().y + Spacecraft.getRect().h/2) - HEIGHT_FRAME_EXP/2;
+                            int time_delay = 100;
+                            explose(x_pos, y_pos, time_delay);
+
+                            endGame();
+
+                            cout << "your spacecraft was crash" << endl;
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        // show time for game
+        std::string str_time = "TIME : ";
+        Uint32 time_val = SDL_GetTicks()/1000;
+        str_time += std::to_string(time_val);
+        time_game.setText(str_time);
+        int gX_pos = 25;
+        int gY_pos = 100;
+
+        time_game.setRect(gX_pos, gY_pos);
+        time_game.createGameText(g_font_text, gRenderer);
+
+        // SDL_WaitEvent - nó đợi vô thời hạn
+        // lên đọc so sánh PollEvent và WaitEven để xem khác biệt
+
+        //if(e.type == SDL_QUIT) break;
+        // show mark_val to screen
+        std::string str_mark_val = std::to_string(mark_val);
+        std::string strMark = "MARK : " + str_mark_val;
+        mark_game.setText(strMark);
+        mark_game.createGameText(g_font_text, gRenderer);
+        mark_game.Render(gRenderer);
+        SDL_RenderPresent(gRenderer);
+        if(SDL_PollEvent(&gEvent) == 0)
+        {
+            continue;
+        }
+    }
+}}
